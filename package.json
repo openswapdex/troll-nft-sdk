@@ -1,0 +1,33 @@
+{
+  "name": "troll-nft-sdk",
+  "version": "1.0.0",
+  "description": "",
+  "typings": "lib/index.d.ts",
+  "main": "lib",
+  "scripts": {
+    "build": "eth-wallet-build 0.8.4 node_modules/@openswapdex/troll-nft/contracts bin src/contracts && tsc",
+    "buildContracts": "eth-wallet-build 0.8.4 node_modules/@openswapdex/troll-nft/contracts bin src/contracts",
+    "test": "mocha --exit --require ts-node/register test/*.test.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openswapdex/troll-nft-sdk.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/openswapdex/troll-nft-sdk/issues"
+  },
+  "homepage": "https://github.com/openswapdex/troll-nft-sdk#readme",
+  "dependencies": {
+    "@ijstech/eth-wallet": "git+https://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:x-oauth-basic@github.com/ijstech/eth-wallet.git",
+    "@openswapdex/troll-nft": "git+https://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:x-oauth-basic@github.com/openswapdex/troll-nft.git"
+  },
+  "devDependencies": {
+    "@types/node": "^16.11.7",
+    "solc": "^0.8.10",
+    "ts-node": "^10.4.0",
+    "typescript": "^4.4.4"
+  }
+}
