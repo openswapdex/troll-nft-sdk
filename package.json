@@ -1,5 +1,5 @@
 {
-  "name": "troll-nft-sdk",
+  "name": "@openswapdex/troll-nft-sdk",
   "version": "1.0.0",
   "description": "",
   "typings": "lib/index.d.ts",
