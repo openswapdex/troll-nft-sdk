@@ -8,6 +8,9 @@ export class TrollNFT extends Contract{
     deploy(params:{name:string,symbol:string,baseURI:string,cap:number|BigNumber,stakeToken:string,requireApproval:boolean,minimumStake:number|BigNumber,protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<string>{        	
         return this._deploy(params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo);
     }
+    parseAddStakesEvent(receipt: TransactionReceipt): {tokenId:BigNumber,amountAdded:BigNumber,newAmount:BigNumber}[]{
+        return this.parseEvents(receipt, "AddStakes");
+    }
     parseApprovalEvent(receipt: TransactionReceipt): {owner:string,approved:string,tokenId:BigNumber}[]{
         return this.parseEvents(receipt, "Approval");
     }
@@ -44,6 +47,12 @@ export class TrollNFT extends Contract{
     parseStakeEvent(receipt: TransactionReceipt): {who:string,tokenId:BigNumber,amount:BigNumber}[]{
         return this.parseEvents(receipt, "Stake");
     }
+    parseStakesApprovalEvent(receipt: TransactionReceipt): {fromTokenId:BigNumber,spender:string,amount:BigNumber}[]{
+        return this.parseEvents(receipt, "StakesApproval");
+    }
+    parseStakesTransferEvent(receipt: TransactionReceipt): {fromTokenId:BigNumber,toTokenId:BigNumber,amount:BigNumber}[]{
+        return this.parseEvents(receipt, "StakesTransfer");
+    }
     parseStartOwnershipTransferEvent(receipt: TransactionReceipt): {user:string}[]{
         return this.parseEvents(receipt, "StartOwnershipTransfer");
     }
@@ -63,6 +72,14 @@ export class TrollNFT extends Contract{
     async _customAttributes(param1:number|BigNumber): Promise<BigNumber>{
         let result = await this.methods('_customAttributes',param1);
         return new BigNumber(result);
+    }
+    async _stakesTransferAllowances(params:{param1:number|BigNumber,param2:string}): Promise<BigNumber>{
+        let result = await this.methods('_stakesTransferAllowances',Utils.toString(params.param1),params.param2);
+        return new BigNumber(result);
+    }
+    async addStakes(params:{tokenId:number|BigNumber,amount:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.methods('addStakes',Utils.toString(params.tokenId),Utils.toString(params.amount));
+        return result;
     }
     async approve(params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
         let result = await this.methods('approve',params.to,Utils.toString(params.tokenId));
@@ -92,13 +109,21 @@ export class TrollNFT extends Contract{
         let result = await this.methods('counter');
         return new BigNumber(result);
     }
-    async creationTime(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('creationTime',param1);
+    async creationDate(param1:number|BigNumber): Promise<BigNumber>{
+        let result = await this.methods('creationDate',param1);
         return new BigNumber(result);
     }
     async deny(user:string): Promise<TransactionReceipt>{
         let result = await this.methods('deny',user);
         return result;
+    }
+    async destoryDate(param1:number|BigNumber): Promise<BigNumber>{
+        let result = await this.methods('destoryDate',param1);
+        return new BigNumber(result);
+    }
+    async extraStakes(param1:number|BigNumber): Promise<BigNumber>{
+        let result = await this.methods('extraStakes',param1);
+        return new BigNumber(result);
     }
     async getApproved(tokenId:number|BigNumber): Promise<string>{
         let result = await this.methods('getApproved',tokenId);
@@ -119,6 +144,10 @@ export class TrollNFT extends Contract{
     async isPermitted(param1:string): Promise<boolean>{
         let result = await this.methods('isPermitted',param1);
         return result;
+    }
+    async lastStakeDate(param1:number|BigNumber): Promise<BigNumber>{
+        let result = await this.methods('lastStakeDate',param1);
+        return new BigNumber(result);
     }
     async minimumStake(): Promise<BigNumber>{
         let result = await this.methods('minimumStake');

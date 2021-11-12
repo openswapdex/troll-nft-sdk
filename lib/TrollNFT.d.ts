@@ -12,6 +12,11 @@ export declare class TrollNFT extends Contract {
         protocolFee: number | BigNumber;
         protocolFeeTo: string;
     }): Promise<string>;
+    parseAddStakesEvent(receipt: TransactionReceipt): {
+        tokenId: BigNumber;
+        amountAdded: BigNumber;
+        newAmount: BigNumber;
+    }[];
     parseApprovalEvent(receipt: TransactionReceipt): {
         owner: string;
         approved: string;
@@ -58,6 +63,16 @@ export declare class TrollNFT extends Contract {
         tokenId: BigNumber;
         amount: BigNumber;
     }[];
+    parseStakesApprovalEvent(receipt: TransactionReceipt): {
+        fromTokenId: BigNumber;
+        spender: string;
+        amount: BigNumber;
+    }[];
+    parseStakesTransferEvent(receipt: TransactionReceipt): {
+        fromTokenId: BigNumber;
+        toTokenId: BigNumber;
+        amount: BigNumber;
+    }[];
     parseStartOwnershipTransferEvent(receipt: TransactionReceipt): {
         user: string;
     }[];
@@ -76,6 +91,14 @@ export declare class TrollNFT extends Contract {
     }[];
     _attributes(param1: number | BigNumber): Promise<BigNumber>;
     _customAttributes(param1: number | BigNumber): Promise<BigNumber>;
+    _stakesTransferAllowances(params: {
+        param1: number | BigNumber;
+        param2: string;
+    }): Promise<BigNumber>;
+    addStakes(params: {
+        tokenId: number | BigNumber;
+        amount: number | BigNumber;
+    }): Promise<TransactionReceipt>;
     approve(params: {
         to: string;
         tokenId: number | BigNumber;
@@ -86,8 +109,10 @@ export declare class TrollNFT extends Contract {
     batchApprove(stakers: string[]): Promise<TransactionReceipt>;
     cap(): Promise<BigNumber>;
     counter(): Promise<BigNumber>;
-    creationTime(param1: number | BigNumber): Promise<BigNumber>;
+    creationDate(param1: number | BigNumber): Promise<BigNumber>;
     deny(user: string): Promise<TransactionReceipt>;
+    destoryDate(param1: number | BigNumber): Promise<BigNumber>;
+    extraStakes(param1: number | BigNumber): Promise<BigNumber>;
     getApproved(tokenId: number | BigNumber): Promise<string>;
     getAttributes1(params: {
         tokenId: number | BigNumber;
@@ -105,6 +130,7 @@ export declare class TrollNFT extends Contract {
         operator: string;
     }): Promise<boolean>;
     isPermitted(param1: string): Promise<boolean>;
+    lastStakeDate(param1: number | BigNumber): Promise<BigNumber>;
     minimumStake(): Promise<BigNumber>;
     minted(param1: string): Promise<boolean>;
     name(): Promise<string>;
