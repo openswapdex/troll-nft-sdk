@@ -1,85 +1,194 @@
-import {Wallet, Contract, TransactionReceipt, Utils, BigNumber} from "@ijstech/eth-wallet";
+import {Wallet, Contract, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
 const Bin = require("../../bin/TrollNFT_VRF.json");
 
 export class TrollNFT_VRF extends Contract{
     constructor(wallet: Wallet, address?: string){
         super(wallet, address, Bin.abi, Bin.bytecode);
     }
-    deploy(params:{name:string,symbol:string,baseURI:string,cap:number|BigNumber,stakeToken:string,requireApproval:boolean,minimumStake:number|BigNumber,protocolFee:number|BigNumber,protocolFeeTo:string,vrfAddresses:string[],vrfParams:string[]}): Promise<string>{        	
+    deploy(params:{name:string,symbol:string,baseURI:string,cap:number|BigNumber,stakeToken:string,requireApproval:boolean,minimumStake:number|BigNumber,protocolFee:number|BigNumber,protocolFeeTo:string,vrfAddresses:string[],vrfParams:string[]}): Promise<string>{
         return this._deploy(params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo,params.vrfAddresses,Utils.stringToBytes32(params.vrfParams));
     }
-    parseAddStakesEvent(receipt: TransactionReceipt): {tokenId:BigNumber,amountAdded:BigNumber,newAmount:BigNumber}[]{
-        return this.parseEvents(receipt, "AddStakes");
+    parseApprovalEvent(receipt: TransactionReceipt): TrollNFT_VRF.ApprovalEvent[]{
+        return this.parseEvents(receipt, "Approval").map(e=>this.decodeApprovalEvent(e));
     }
-    parseApprovalEvent(receipt: TransactionReceipt): {owner:string,approved:string,tokenId:BigNumber}[]{
-        return this.parseEvents(receipt, "Approval");
+    decodeApprovalEvent(event: Event): TrollNFT_VRF.ApprovalEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            owner: result.owner,
+            approved: result.approved,
+            tokenId: new BigNumber(result.tokenId)
+        };
     }
-    parseApprovalForAllEvent(receipt: TransactionReceipt): {owner:string,operator:string,approved:boolean}[]{
-        return this.parseEvents(receipt, "ApprovalForAll");
+    parseApprovalForAllEvent(receipt: TransactionReceipt): TrollNFT_VRF.ApprovalForAllEvent[]{
+        return this.parseEvents(receipt, "ApprovalForAll").map(e=>this.decodeApprovalForAllEvent(e));
     }
-    parseApprovedStakerEvent(receipt: TransactionReceipt): {staker:string,allow:boolean}[]{
-        return this.parseEvents(receipt, "ApprovedStaker");
+    decodeApprovalForAllEvent(event: Event): TrollNFT_VRF.ApprovalForAllEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            owner: result.owner,
+            operator: result.operator,
+            approved: result.approved
+        };
     }
-    parseAttributeEvent(receipt: TransactionReceipt): {tokenId:BigNumber,attribute:BigNumber}[]{
-        return this.parseEvents(receipt, "Attribute");
+    parseApprovedStakerEvent(receipt: TransactionReceipt): TrollNFT_VRF.ApprovedStakerEvent[]{
+        return this.parseEvents(receipt, "ApprovedStaker").map(e=>this.decodeApprovedStakerEvent(e));
     }
-    parseAuthorizeEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "Authorize");
+    decodeApprovedStakerEvent(event: Event): TrollNFT_VRF.ApprovedStakerEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            staker: result.staker,
+            allow: result.allow
+        };
     }
-    parseBaseURIEvent(receipt: TransactionReceipt): {baseURI:string}[]{
-        return this.parseEvents(receipt, "BaseURI");
+    parseAttributeEvent(receipt: TransactionReceipt): TrollNFT_VRF.AttributeEvent[]{
+        return this.parseEvents(receipt, "Attribute").map(e=>this.decodeAttributeEvent(e));
     }
-    parseCapEvent(receipt: TransactionReceipt): {cap:BigNumber}[]{
-        return this.parseEvents(receipt, "Cap");
+    decodeAttributeEvent(event: Event): TrollNFT_VRF.AttributeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            tokenId: new BigNumber(result.tokenId),
+            attribute: new BigNumber(result.attribute)
+        };
     }
-    parseCustomAttributeEvent(receipt: TransactionReceipt): {tokenId:BigNumber,attribute:BigNumber}[]{
-        return this.parseEvents(receipt, "CustomAttribute");
+    parseAuthorizeEvent(receipt: TransactionReceipt): TrollNFT_VRF.AuthorizeEvent[]{
+        return this.parseEvents(receipt, "Authorize").map(e=>this.decodeAuthorizeEvent(e));
     }
-    parseDeauthorizeEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "Deauthorize");
+    decodeAuthorizeEvent(event: Event): TrollNFT_VRF.AuthorizeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
     }
-    parseMinimumStakeEvent(receipt: TransactionReceipt): {minimumStake:BigNumber}[]{
-        return this.parseEvents(receipt, "MinimumStake");
+    parseBaseURIEvent(receipt: TransactionReceipt): TrollNFT_VRF.BaseURIEvent[]{
+        return this.parseEvents(receipt, "BaseURI").map(e=>this.decodeBaseURIEvent(e));
     }
-    parseProtocolFeeEvent(receipt: TransactionReceipt): {protocolFee:BigNumber,protocolFeeTo:string}[]{
-        return this.parseEvents(receipt, "ProtocolFee");
+    decodeBaseURIEvent(event: Event): TrollNFT_VRF.BaseURIEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            baseURI: result.baseURI
+        };
     }
-    parseStakeEvent(receipt: TransactionReceipt): {who:string,tokenId:BigNumber,amount:BigNumber}[]{
-        return this.parseEvents(receipt, "Stake");
+    parseCapEvent(receipt: TransactionReceipt): TrollNFT_VRF.CapEvent[]{
+        return this.parseEvents(receipt, "Cap").map(e=>this.decodeCapEvent(e));
     }
-    parseStakesApprovalEvent(receipt: TransactionReceipt): {fromTokenId:BigNumber,spender:string,amount:BigNumber}[]{
-        return this.parseEvents(receipt, "StakesApproval");
+    decodeCapEvent(event: Event): TrollNFT_VRF.CapEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            cap: new BigNumber(result.cap)
+        };
     }
-    parseStakesTransferEvent(receipt: TransactionReceipt): {fromTokenId:BigNumber,toTokenId:BigNumber,amount:BigNumber}[]{
-        return this.parseEvents(receipt, "StakesTransfer");
+    parseCustomAttributeEvent(receipt: TransactionReceipt): TrollNFT_VRF.CustomAttributeEvent[]{
+        return this.parseEvents(receipt, "CustomAttribute").map(e=>this.decodeCustomAttributeEvent(e));
     }
-    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "StartOwnershipTransfer");
+    decodeCustomAttributeEvent(event: Event): TrollNFT_VRF.CustomAttributeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            tokenId: new BigNumber(result.tokenId),
+            attribute: new BigNumber(result.attribute)
+        };
     }
-    parseTransferEvent(receipt: TransactionReceipt): {from:string,to:string,tokenId:BigNumber}[]{
-        return this.parseEvents(receipt, "Transfer");
+    parseDeauthorizeEvent(receipt: TransactionReceipt): TrollNFT_VRF.DeauthorizeEvent[]{
+        return this.parseEvents(receipt, "Deauthorize").map(e=>this.decodeDeauthorizeEvent(e));
     }
-    parseTransferOwnershipEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "TransferOwnership");
+    decodeDeauthorizeEvent(event: Event): TrollNFT_VRF.DeauthorizeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
     }
-    parseUnstakeEvent(receipt: TransactionReceipt): {who:string,tokenId:BigNumber,amount:BigNumber}[]{
-        return this.parseEvents(receipt, "Unstake");
+    parseMinimumStakeEvent(receipt: TransactionReceipt): TrollNFT_VRF.MinimumStakeEvent[]{
+        return this.parseEvents(receipt, "MinimumStake").map(e=>this.decodeMinimumStakeEvent(e));
+    }
+    decodeMinimumStakeEvent(event: Event): TrollNFT_VRF.MinimumStakeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            minimumStake: new BigNumber(result.minimumStake)
+        };
+    }
+    parseProtocolFeeEvent(receipt: TransactionReceipt): TrollNFT_VRF.ProtocolFeeEvent[]{
+        return this.parseEvents(receipt, "ProtocolFee").map(e=>this.decodeProtocolFeeEvent(e));
+    }
+    decodeProtocolFeeEvent(event: Event): TrollNFT_VRF.ProtocolFeeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            protocolFee: new BigNumber(result.protocolFee),
+            protocolFeeTo: result.protocolFeeTo
+        };
+    }
+    parseStakeEvent(receipt: TransactionReceipt): TrollNFT_VRF.StakeEvent[]{
+        return this.parseEvents(receipt, "Stake").map(e=>this.decodeStakeEvent(e));
+    }
+    decodeStakeEvent(event: Event): TrollNFT_VRF.StakeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            who: result.who,
+            tokenId: new BigNumber(result.tokenId),
+            amount: new BigNumber(result.amount)
+        };
+    }
+    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): TrollNFT_VRF.StartOwnershipTransferEvent[]{
+        return this.parseEvents(receipt, "StartOwnershipTransfer").map(e=>this.decodeStartOwnershipTransferEvent(e));
+    }
+    decodeStartOwnershipTransferEvent(event: Event): TrollNFT_VRF.StartOwnershipTransferEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
+    }
+    parseTransferEvent(receipt: TransactionReceipt): TrollNFT_VRF.TransferEvent[]{
+        return this.parseEvents(receipt, "Transfer").map(e=>this.decodeTransferEvent(e));
+    }
+    decodeTransferEvent(event: Event): TrollNFT_VRF.TransferEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            from: result.from,
+            to: result.to,
+            tokenId: new BigNumber(result.tokenId)
+        };
+    }
+    parseTransferOwnershipEvent(receipt: TransactionReceipt): TrollNFT_VRF.TransferOwnershipEvent[]{
+        return this.parseEvents(receipt, "TransferOwnership").map(e=>this.decodeTransferOwnershipEvent(e));
+    }
+    decodeTransferOwnershipEvent(event: Event): TrollNFT_VRF.TransferOwnershipEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
+    }
+    parseUnstakeEvent(receipt: TransactionReceipt): TrollNFT_VRF.UnstakeEvent[]{
+        return this.parseEvents(receipt, "Unstake").map(e=>this.decodeUnstakeEvent(e));
+    }
+    decodeUnstakeEvent(event: Event): TrollNFT_VRF.UnstakeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            who: result.who,
+            tokenId: new BigNumber(result.tokenId),
+            amount: new BigNumber(result.amount)
+        };
     }
     async _attributes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('_attributes',param1);
+        let result = await this.methods('_attributes',Utils.toString(param1));
         return new BigNumber(result);
     }
     async _customAttributes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('_customAttributes',param1);
+        let result = await this.methods('_customAttributes',Utils.toString(param1));
         return new BigNumber(result);
-    }
-    async _stakesTransferAllowances(params:{param1:number|BigNumber,param2:string}): Promise<BigNumber>{
-        let result = await this.methods('_stakesTransferAllowances',Utils.toString(params.param1),params.param2);
-        return new BigNumber(result);
-    }
-    async addStakes(params:{tokenId:number|BigNumber,amount:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('addStakes',Utils.toString(params.tokenId),Utils.toString(params.amount));
-        return result;
     }
     async approve(params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
         let result = await this.methods('approve',params.to,Utils.toString(params.tokenId));
@@ -109,31 +218,23 @@ export class TrollNFT_VRF extends Contract{
         let result = await this.methods('counter');
         return new BigNumber(result);
     }
-    async creationDate(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('creationDate',param1);
+    async creationTime(param1:number|BigNumber): Promise<BigNumber>{
+        let result = await this.methods('creationTime',Utils.toString(param1));
         return new BigNumber(result);
     }
     async deny(user:string): Promise<TransactionReceipt>{
         let result = await this.methods('deny',user);
         return result;
     }
-    async destoryDate(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('destoryDate',param1);
-        return new BigNumber(result);
-    }
-    async extraStakes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('extraStakes',param1);
-        return new BigNumber(result);
-    }
     async getApproved(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.methods('getApproved',tokenId);
+        let result = await this.methods('getApproved',Utils.toString(tokenId));
         return result;
     }
     async getAttributes1(params:{tokenId:number|BigNumber,base:number|BigNumber,offset:number|BigNumber,digits:number|BigNumber}): Promise<BigNumber>{
         let result = await this.methods('getAttributes1',Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.offset),Utils.toString(params.digits));
         return new BigNumber(result);
     }
-    async getAttributes2(params:{tokenId:number|BigNumber,base:number|BigNumber,digits:number[]|BigNumber[]}): Promise<BigNumber[]>{
+    async getAttributes2(params:{tokenId:number|BigNumber,base:number|BigNumber,digits:(number|BigNumber)[]}): Promise<BigNumber[]>{
         let result = await this.methods('getAttributes2',Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.digits));
         return result;
     }
@@ -144,10 +245,6 @@ export class TrollNFT_VRF extends Contract{
     async isPermitted(param1:string): Promise<boolean>{
         let result = await this.methods('isPermitted',param1);
         return result;
-    }
-    async lastStakeDate(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('lastStakeDate',param1);
-        return new BigNumber(result);
     }
     async minimumStake(): Promise<BigNumber>{
         let result = await this.methods('minimumStake');
@@ -170,7 +267,7 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async ownerOf(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.methods('ownerOf',tokenId);
+        let result = await this.methods('ownerOf',Utils.toString(tokenId));
         return result;
     }
     async permit(user:string): Promise<TransactionReceipt>{
@@ -218,7 +315,7 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async setCap(cap:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('setCap',cap);
+        let result = await this.methods('setCap',Utils.toString(cap));
         return result;
     }
     async setCustomAttribute(params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<TransactionReceipt>{
@@ -226,7 +323,7 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async setMinimumStake(minimumStake:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('setMinimumStake',minimumStake);
+        let result = await this.methods('setMinimumStake',Utils.toString(minimumStake));
         return result;
     }
     async setProtocolFee(params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<TransactionReceipt>{
@@ -238,7 +335,7 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async stake(amount:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('stake',amount);
+        let result = await this.methods('stake',Utils.toString(amount));
         return result;
     }
     async stakeToken(): Promise<string>{
@@ -246,7 +343,7 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async stakingBalance(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('stakingBalance',param1);
+        let result = await this.methods('stakingBalance',Utils.toString(param1));
         return new BigNumber(result);
     }
     async supportsInterface(interfaceId:string): Promise<boolean>{
@@ -262,7 +359,7 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async tokenByIndex(index:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('tokenByIndex',index);
+        let result = await this.methods('tokenByIndex',Utils.toString(index));
         return new BigNumber(result);
     }
     async tokenOfOwnerByIndex(params:{owner:string,index:number|BigNumber}): Promise<BigNumber>{
@@ -270,7 +367,7 @@ export class TrollNFT_VRF extends Contract{
         return new BigNumber(result);
     }
     async tokenURI(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.methods('tokenURI',tokenId);
+        let result = await this.methods('tokenURI',Utils.toString(tokenId));
         return result;
     }
     async totalSupply(): Promise<BigNumber>{
@@ -290,11 +387,29 @@ export class TrollNFT_VRF extends Contract{
         return result;
     }
     async unstake(tokenId:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('unstake',tokenId);
+        let result = await this.methods('unstake',Utils.toString(tokenId));
         return result;
     }
     async withdrawLink(amount:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('withdrawLink',amount);
+        let result = await this.methods('withdrawLink',Utils.toString(amount));
         return result;
     }
+}
+export module TrollNFT_VRF{
+    export interface ApprovalEvent {_event:Event,owner:string,approved:string,tokenId:BigNumber}
+    export interface ApprovalForAllEvent {_event:Event,owner:string,operator:string,approved:boolean}
+    export interface ApprovedStakerEvent {_event:Event,staker:string,allow:boolean}
+    export interface AttributeEvent {_event:Event,tokenId:BigNumber,attribute:BigNumber}
+    export interface AuthorizeEvent {_event:Event,user:string}
+    export interface BaseURIEvent {_event:Event,baseURI:string}
+    export interface CapEvent {_event:Event,cap:BigNumber}
+    export interface CustomAttributeEvent {_event:Event,tokenId:BigNumber,attribute:BigNumber}
+    export interface DeauthorizeEvent {_event:Event,user:string}
+    export interface MinimumStakeEvent {_event:Event,minimumStake:BigNumber}
+    export interface ProtocolFeeEvent {_event:Event,protocolFee:BigNumber,protocolFeeTo:string}
+    export interface StakeEvent {_event:Event,who:string,tokenId:BigNumber,amount:BigNumber}
+    export interface StartOwnershipTransferEvent {_event:Event,user:string}
+    export interface TransferEvent {_event:Event,from:string,to:string,tokenId:BigNumber}
+    export interface TransferOwnershipEvent {_event:Event,user:string}
+    export interface UnstakeEvent {_event:Event,who:string,tokenId:BigNumber,amount:BigNumber}
 }

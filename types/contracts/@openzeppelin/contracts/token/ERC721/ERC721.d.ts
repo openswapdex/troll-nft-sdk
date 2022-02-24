@@ -1,25 +1,16 @@
-import { Wallet, Contract, TransactionReceipt, BigNumber } from "@ijstech/eth-wallet";
+import { Wallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
 export declare class ERC721 extends Contract {
     constructor(wallet: Wallet, address?: string);
     deploy(params: {
         name: string;
         symbol: string;
     }): Promise<string>;
-    parseApprovalEvent(receipt: TransactionReceipt): {
-        owner: string;
-        approved: string;
-        tokenId: BigNumber;
-    }[];
-    parseApprovalForAllEvent(receipt: TransactionReceipt): {
-        owner: string;
-        operator: string;
-        approved: boolean;
-    }[];
-    parseTransferEvent(receipt: TransactionReceipt): {
-        from: string;
-        to: string;
-        tokenId: BigNumber;
-    }[];
+    parseApprovalEvent(receipt: TransactionReceipt): ERC721.ApprovalEvent[];
+    decodeApprovalEvent(event: Event): ERC721.ApprovalEvent;
+    parseApprovalForAllEvent(receipt: TransactionReceipt): ERC721.ApprovalForAllEvent[];
+    decodeApprovalForAllEvent(event: Event): ERC721.ApprovalForAllEvent;
+    parseTransferEvent(receipt: TransactionReceipt): ERC721.TransferEvent[];
+    decodeTransferEvent(event: Event): ERC721.TransferEvent;
     approve(params: {
         to: string;
         tokenId: number | BigNumber;
@@ -55,4 +46,24 @@ export declare class ERC721 extends Contract {
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
+}
+export declare module ERC721 {
+    interface ApprovalEvent {
+        _event: Event;
+        owner: string;
+        approved: string;
+        tokenId: BigNumber;
+    }
+    interface ApprovalForAllEvent {
+        _event: Event;
+        owner: string;
+        operator: string;
+        approved: boolean;
+    }
+    interface TransferEvent {
+        _event: Event;
+        from: string;
+        to: string;
+        tokenId: BigNumber;
+    }
 }

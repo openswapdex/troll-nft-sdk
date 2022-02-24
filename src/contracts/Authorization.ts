@@ -1,24 +1,52 @@
-import {Wallet, Contract, TransactionReceipt, Utils, BigNumber} from "@ijstech/eth-wallet";
+import {Wallet, Contract, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
 const Bin = require("../../bin/Authorization.json");
 
 export class Authorization extends Contract{
     constructor(wallet: Wallet, address?: string){
         super(wallet, address, Bin.abi, Bin.bytecode);
     }
-    deploy(): Promise<string>{        	
+    deploy(): Promise<string>{
         return this._deploy();
     }
-    parseAuthorizeEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "Authorize");
+    parseAuthorizeEvent(receipt: TransactionReceipt): Authorization.AuthorizeEvent[]{
+        return this.parseEvents(receipt, "Authorize").map(e=>this.decodeAuthorizeEvent(e));
     }
-    parseDeauthorizeEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "Deauthorize");
+    decodeAuthorizeEvent(event: Event): Authorization.AuthorizeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
     }
-    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "StartOwnershipTransfer");
+    parseDeauthorizeEvent(receipt: TransactionReceipt): Authorization.DeauthorizeEvent[]{
+        return this.parseEvents(receipt, "Deauthorize").map(e=>this.decodeDeauthorizeEvent(e));
     }
-    parseTransferOwnershipEvent(receipt: TransactionReceipt): {user:string}[]{
-        return this.parseEvents(receipt, "TransferOwnership");
+    decodeDeauthorizeEvent(event: Event): Authorization.DeauthorizeEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
+    }
+    parseStartOwnershipTransferEvent(receipt: TransactionReceipt): Authorization.StartOwnershipTransferEvent[]{
+        return this.parseEvents(receipt, "StartOwnershipTransfer").map(e=>this.decodeStartOwnershipTransferEvent(e));
+    }
+    decodeStartOwnershipTransferEvent(event: Event): Authorization.StartOwnershipTransferEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
+    }
+    parseTransferOwnershipEvent(receipt: TransactionReceipt): Authorization.TransferOwnershipEvent[]{
+        return this.parseEvents(receipt, "TransferOwnership").map(e=>this.decodeTransferOwnershipEvent(e));
+    }
+    decodeTransferOwnershipEvent(event: Event): Authorization.TransferOwnershipEvent{
+        let result = event.data;
+        return {
+            _event:event,
+            user: result.user
+        };
     }
     async deny(user:string): Promise<TransactionReceipt>{
         let result = await this.methods('deny',user);
@@ -48,4 +76,10 @@ export class Authorization extends Contract{
         let result = await this.methods('transferOwnership',newOwner);
         return result;
     }
+}
+export module Authorization{
+    export interface AuthorizeEvent {_event:Event,user:string}
+    export interface DeauthorizeEvent {_event:Event,user:string}
+    export interface StartOwnershipTransferEvent {_event:Event,user:string}
+    export interface TransferOwnershipEvent {_event:Event,user:string}
 }
