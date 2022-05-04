@@ -1,14 +1,14 @@
 {
   "name": "@openswapdex/troll-nft-sdk",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
   "main": "lib",
   "scripts": {
-    "build": "eth-wallet-build 0.8.4 node_modules/@openswapdex/troll-nft/contracts bin src/contracts",
+    "build": "npm run build:contracts && npm run build:lib",
+    "build:contracts": "sol2ts solidity.config.json",
     "build:lib": "tsc && node esbuild.bundle",
-    "buildContracts": "eth-wallet-build 0.8.4 node_modules/@openswapdex/troll-nft/contracts bin src/contracts",
     "test": "mocha --exit --require ts-node/register test/*.test.ts"
   },
   "repository": {

@@ -1,12 +1,13 @@
-import {Wallet, Contract, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
-const Bin = require("../../bin/TrollNFT_VRFV2.json");
+import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
+import Bin from "./TrollNFT_VRFV2.json";
 
 export class TrollNFT_VRFV2 extends Contract{
-    constructor(wallet: Wallet, address?: string){
+    constructor(wallet: IWallet, address?: string){
         super(wallet, address, Bin.abi, Bin.bytecode);
+        this.assign()
     }
     deploy(params:{name:string,symbol:string,baseURI:string,cap:number|BigNumber,stakeToken:string,requireApproval:boolean,minimumStake:number|BigNumber,protocolFee:number|BigNumber,protocolFeeTo:string,nftInfo:{listValidNFTs:string[],maximumValidNFTs:number|BigNumber},vrfInfo:{vrfAddresses:string[],vrfParams:string[]}}): Promise<string>{
-        return this._deploy(params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo,Utils.toString(Object.values(params.nftInfo)),Utils.toString(Object.values(params.vrfInfo)));
+        return this._deploy(params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo,[params.nftInfo.listValidNFTs,Utils.toString(params.nftInfo.maximumValidNFTs)],[params.vrfInfo.vrfAddresses,Utils.stringToBytes32(params.vrfInfo.vrfParams)]);
     }
     parseAddStakesEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.AddStakesEvent[]{
         return this.parseEvents(receipt, "AddStakes").map(e=>this.decodeAddStakesEvent(e));
@@ -14,10 +15,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeAddStakesEvent(event: Event): TrollNFT_VRFV2.AddStakesEvent{
         let result = event.data;
         return {
-            _event:event,
             tokenId: new BigNumber(result.tokenId),
             amountAdded: new BigNumber(result.amountAdded),
-            newAmount: new BigNumber(result.newAmount)
+            newAmount: new BigNumber(result.newAmount),
+            _event: event
         };
     }
     parseAddValidNFTEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.AddValidNFTEvent[]{
@@ -26,8 +27,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeAddValidNFTEvent(event: Event): TrollNFT_VRFV2.AddValidNFTEvent{
         let result = event.data;
         return {
-            _event:event,
-            nft: result.nft
+            nft: result.nft,
+            _event: event
         };
     }
     parseApprovalEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.ApprovalEvent[]{
@@ -36,10 +37,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeApprovalEvent(event: Event): TrollNFT_VRFV2.ApprovalEvent{
         let result = event.data;
         return {
-            _event:event,
             owner: result.owner,
             approved: result.approved,
-            tokenId: new BigNumber(result.tokenId)
+            tokenId: new BigNumber(result.tokenId),
+            _event: event
         };
     }
     parseApprovalForAllEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.ApprovalForAllEvent[]{
@@ -48,10 +49,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeApprovalForAllEvent(event: Event): TrollNFT_VRFV2.ApprovalForAllEvent{
         let result = event.data;
         return {
-            _event:event,
             owner: result.owner,
             operator: result.operator,
-            approved: result.approved
+            approved: result.approved,
+            _event: event
         };
     }
     parseApprovedStakerEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.ApprovedStakerEvent[]{
@@ -60,9 +61,9 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeApprovedStakerEvent(event: Event): TrollNFT_VRFV2.ApprovedStakerEvent{
         let result = event.data;
         return {
-            _event:event,
             staker: result.staker,
-            allow: result.allow
+            allow: result.allow,
+            _event: event
         };
     }
     parseAttributeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.AttributeEvent[]{
@@ -71,9 +72,9 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeAttributeEvent(event: Event): TrollNFT_VRFV2.AttributeEvent{
         let result = event.data;
         return {
-            _event:event,
             tokenId: new BigNumber(result.tokenId),
-            attribute: new BigNumber(result.attribute)
+            attribute: new BigNumber(result.attribute),
+            _event: event
         };
     }
     parseAuthorizeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.AuthorizeEvent[]{
@@ -82,8 +83,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeAuthorizeEvent(event: Event): TrollNFT_VRFV2.AuthorizeEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseBaseURIEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.BaseURIEvent[]{
@@ -92,8 +93,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeBaseURIEvent(event: Event): TrollNFT_VRFV2.BaseURIEvent{
         let result = event.data;
         return {
-            _event:event,
-            baseURI: result.baseURI
+            baseURI: result.baseURI,
+            _event: event
         };
     }
     parseCapEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.CapEvent[]{
@@ -102,8 +103,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeCapEvent(event: Event): TrollNFT_VRFV2.CapEvent{
         let result = event.data;
         return {
-            _event:event,
-            cap: new BigNumber(result.cap)
+            cap: new BigNumber(result.cap),
+            _event: event
         };
     }
     parseCustomAttributeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.CustomAttributeEvent[]{
@@ -112,9 +113,9 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeCustomAttributeEvent(event: Event): TrollNFT_VRFV2.CustomAttributeEvent{
         let result = event.data;
         return {
-            _event:event,
             tokenId: new BigNumber(result.tokenId),
-            attribute: new BigNumber(result.attribute)
+            attribute: new BigNumber(result.attribute),
+            _event: event
         };
     }
     parseDeauthorizeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.DeauthorizeEvent[]{
@@ -123,8 +124,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeDeauthorizeEvent(event: Event): TrollNFT_VRFV2.DeauthorizeEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseEquipNFTEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.EquipNFTEvent[]{
@@ -133,10 +134,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeEquipNFTEvent(event: Event): TrollNFT_VRFV2.EquipNFTEvent{
         let result = event.data;
         return {
-            _event:event,
             trollId: new BigNumber(result.trollId),
             nft: result.nft,
-            nftId: new BigNumber(result.nftId)
+            nftId: new BigNumber(result.nftId),
+            _event: event
         };
     }
     parseMinimumStakeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.MinimumStakeEvent[]{
@@ -145,8 +146,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeMinimumStakeEvent(event: Event): TrollNFT_VRFV2.MinimumStakeEvent{
         let result = event.data;
         return {
-            _event:event,
-            minimumStake: new BigNumber(result.minimumStake)
+            minimumStake: new BigNumber(result.minimumStake),
+            _event: event
         };
     }
     parseProtocolFeeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.ProtocolFeeEvent[]{
@@ -155,9 +156,9 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeProtocolFeeEvent(event: Event): TrollNFT_VRFV2.ProtocolFeeEvent{
         let result = event.data;
         return {
-            _event:event,
             protocolFee: new BigNumber(result.protocolFee),
-            protocolFeeTo: result.protocolFeeTo
+            protocolFeeTo: result.protocolFeeTo,
+            _event: event
         };
     }
     parseStakeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.StakeEvent[]{
@@ -166,10 +167,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeStakeEvent(event: Event): TrollNFT_VRFV2.StakeEvent{
         let result = event.data;
         return {
-            _event:event,
             who: result.who,
             tokenId: new BigNumber(result.tokenId),
-            amount: new BigNumber(result.amount)
+            amount: new BigNumber(result.amount),
+            _event: event
         };
     }
     parseStakesApprovalEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.StakesApprovalEvent[]{
@@ -178,10 +179,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeStakesApprovalEvent(event: Event): TrollNFT_VRFV2.StakesApprovalEvent{
         let result = event.data;
         return {
-            _event:event,
             fromTokenId: new BigNumber(result.fromTokenId),
             spender: result.spender,
-            amount: new BigNumber(result.amount)
+            amount: new BigNumber(result.amount),
+            _event: event
         };
     }
     parseStakesTransferEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.StakesTransferEvent[]{
@@ -190,10 +191,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeStakesTransferEvent(event: Event): TrollNFT_VRFV2.StakesTransferEvent{
         let result = event.data;
         return {
-            _event:event,
             fromTokenId: new BigNumber(result.fromTokenId),
             toTokenId: new BigNumber(result.toTokenId),
-            amount: new BigNumber(result.amount)
+            amount: new BigNumber(result.amount),
+            _event: event
         };
     }
     parseStartOwnershipTransferEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.StartOwnershipTransferEvent[]{
@@ -202,8 +203,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeStartOwnershipTransferEvent(event: Event): TrollNFT_VRFV2.StartOwnershipTransferEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseTransferEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.TransferEvent[]{
@@ -212,10 +213,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeTransferEvent(event: Event): TrollNFT_VRFV2.TransferEvent{
         let result = event.data;
         return {
-            _event:event,
             from: result.from,
             to: result.to,
-            tokenId: new BigNumber(result.tokenId)
+            tokenId: new BigNumber(result.tokenId),
+            _event: event
         };
     }
     parseTransferOwnershipEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.TransferOwnershipEvent[]{
@@ -224,8 +225,8 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeTransferOwnershipEvent(event: Event): TrollNFT_VRFV2.TransferOwnershipEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseUnequipNFTEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.UnequipNFTEvent[]{
@@ -234,10 +235,10 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeUnequipNFTEvent(event: Event): TrollNFT_VRFV2.UnequipNFTEvent{
         let result = event.data;
         return {
-            _event:event,
             trollId: new BigNumber(result.trollId),
             nft: result.nft,
-            nftId: new BigNumber(result.nftId)
+            nftId: new BigNumber(result.nftId),
+            _event: event
         };
     }
     parseUnstakeEvent(receipt: TransactionReceipt): TrollNFT_VRFV2.UnstakeEvent[]{
@@ -246,302 +247,538 @@ export class TrollNFT_VRFV2 extends Contract{
     decodeUnstakeEvent(event: Event): TrollNFT_VRFV2.UnstakeEvent{
         let result = event.data;
         return {
-            _event:event,
             who: result.who,
             tokenId: new BigNumber(result.tokenId),
-            amount: new BigNumber(result.amount)
+            amount: new BigNumber(result.amount),
+            _event: event
         };
     }
     async _attributes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('_attributes',Utils.toString(param1));
+        let result = await this.call('_attributes',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
     async _customAttributes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('_customAttributes',Utils.toString(param1));
+        let result = await this.call('_customAttributes',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
     async _stakesTransferAllowances(params:{param1:number|BigNumber,param2:string}): Promise<BigNumber>{
-        let result = await this.methods('_stakesTransferAllowances',Utils.toString(params.param1),params.param2);
+        let result = await this.call('_stakesTransferAllowances',[Utils.toString(params.param1),params.param2]);
         return new BigNumber(result);
     }
-    async addStakes(params:{tokenId:number|BigNumber,amount:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('addStakes',Utils.toString(params.tokenId),Utils.toString(params.amount));
+    async addStakes_send(params:{tokenId:number|BigNumber,amount:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('addStakes',[Utils.toString(params.tokenId),Utils.toString(params.amount)]);
         return result;
     }
-    async addValidNFTs(nfts:string[]): Promise<TransactionReceipt>{
-        let result = await this.methods('addValidNFTs',nfts);
+    async addStakes_call(params:{tokenId:number|BigNumber,amount:number|BigNumber}): Promise<void>{
+        let result = await this.call('addStakes',[Utils.toString(params.tokenId),Utils.toString(params.amount)]);
+        return;
+    }
+    addStakes: {
+        (params:{tokenId:number|BigNumber,amount:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{tokenId:number|BigNumber,amount:number|BigNumber}) => Promise<void>;
+    }
+    async addValidNFTs_send(nfts:string[]): Promise<TransactionReceipt>{
+        let result = await this.send('addValidNFTs',[nfts]);
         return result;
     }
-    async approve(params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('approve',params.to,Utils.toString(params.tokenId));
+    async addValidNFTs_call(nfts:string[]): Promise<void>{
+        let result = await this.call('addValidNFTs',[nfts]);
+        return;
+    }
+    addValidNFTs: {
+        (nfts:string[]): Promise<TransactionReceipt>;
+        call: (nfts:string[]) => Promise<void>;
+    }
+    async approve_send(params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('approve',[params.to,Utils.toString(params.tokenId)]);
         return result;
+    }
+    async approve_call(params:{to:string,tokenId:number|BigNumber}): Promise<void>{
+        let result = await this.call('approve',[params.to,Utils.toString(params.tokenId)]);
+        return;
+    }
+    approve: {
+        (params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{to:string,tokenId:number|BigNumber}) => Promise<void>;
     }
     async approvedStaker(param1:string): Promise<boolean>{
-        let result = await this.methods('approvedStaker',param1);
+        let result = await this.call('approvedStaker',[param1]);
         return result;
     }
     async balanceOf(owner:string): Promise<BigNumber>{
-        let result = await this.methods('balanceOf',owner);
+        let result = await this.call('balanceOf',[owner]);
         return new BigNumber(result);
     }
     async baseURI(): Promise<string>{
-        let result = await this.methods('baseURI');
+        let result = await this.call('baseURI');
         return result;
     }
-    async batchApprove(stakers:string[]): Promise<TransactionReceipt>{
-        let result = await this.methods('batchApprove',stakers);
+    async batchApprove_send(stakers:string[]): Promise<TransactionReceipt>{
+        let result = await this.send('batchApprove',[stakers]);
         return result;
+    }
+    async batchApprove_call(stakers:string[]): Promise<void>{
+        let result = await this.call('batchApprove',[stakers]);
+        return;
+    }
+    batchApprove: {
+        (stakers:string[]): Promise<TransactionReceipt>;
+        call: (stakers:string[]) => Promise<void>;
     }
     async cap(): Promise<BigNumber>{
-        let result = await this.methods('cap');
+        let result = await this.call('cap');
         return new BigNumber(result);
     }
     async counter(): Promise<BigNumber>{
-        let result = await this.methods('counter');
+        let result = await this.call('counter');
         return new BigNumber(result);
     }
     async creationDate(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('creationDate',Utils.toString(param1));
+        let result = await this.call('creationDate',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
-    async deny(user:string): Promise<TransactionReceipt>{
-        let result = await this.methods('deny',user);
+    async deny_send(user:string): Promise<TransactionReceipt>{
+        let result = await this.send('deny',[user]);
         return result;
+    }
+    async deny_call(user:string): Promise<void>{
+        let result = await this.call('deny',[user]);
+        return;
+    }
+    deny: {
+        (user:string): Promise<TransactionReceipt>;
+        call: (user:string) => Promise<void>;
     }
     async destoryDate(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('destoryDate',Utils.toString(param1));
+        let result = await this.call('destoryDate',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
-    async equipNFT(params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('equipNFT',Utils.toString(params.trollId),params.nft,Utils.toString(params.nftId));
+    async equipNFT_send(params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('equipNFT',[Utils.toString(params.trollId),params.nft,Utils.toString(params.nftId)]);
         return result;
     }
+    async equipNFT_call(params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<void>{
+        let result = await this.call('equipNFT',[Utils.toString(params.trollId),params.nft,Utils.toString(params.nftId)]);
+        return;
+    }
+    equipNFT: {
+        (params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}) => Promise<void>;
+    }
     async extraStakes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('extraStakes',Utils.toString(param1));
+        let result = await this.call('extraStakes',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
     async getApproved(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.methods('getApproved',Utils.toString(tokenId));
+        let result = await this.call('getApproved',[Utils.toString(tokenId)]);
         return result;
     }
     async getAttributes1(params:{tokenId:number|BigNumber,base:number|BigNumber,offset:number|BigNumber,digits:number|BigNumber}): Promise<BigNumber>{
-        let result = await this.methods('getAttributes1',Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.offset),Utils.toString(params.digits));
+        let result = await this.call('getAttributes1',[Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.offset),Utils.toString(params.digits)]);
         return new BigNumber(result);
     }
     async getAttributes2(params:{tokenId:number|BigNumber,base:number|BigNumber,digits:(number|BigNumber)[]}): Promise<BigNumber[]>{
-        let result = await this.methods('getAttributes2',Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.digits));
-        return result;
+        let result = await this.call('getAttributes2',[Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.digits)]);
+        return result.map(e=>new BigNumber(e));
     }
     async isApprovedForAll(params:{owner:string,operator:string}): Promise<boolean>{
-        let result = await this.methods('isApprovedForAll',params.owner,params.operator);
+        let result = await this.call('isApprovedForAll',[params.owner,params.operator]);
         return result;
     }
     async isPermitted(param1:string): Promise<boolean>{
-        let result = await this.methods('isPermitted',param1);
+        let result = await this.call('isPermitted',[param1]);
         return result;
     }
     async isValidNFT(param1:string): Promise<boolean>{
-        let result = await this.methods('isValidNFT',param1);
+        let result = await this.call('isValidNFT',[param1]);
         return result;
     }
     async lastStakeDate(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('lastStakeDate',Utils.toString(param1));
+        let result = await this.call('lastStakeDate',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
     async listValidNFTs(param1:number|BigNumber): Promise<string>{
-        let result = await this.methods('listValidNFTs',Utils.toString(param1));
+        let result = await this.call('listValidNFTs',[Utils.toString(param1)]);
         return result;
     }
     async maximumValidNFTs(): Promise<BigNumber>{
-        let result = await this.methods('maximumValidNFTs');
+        let result = await this.call('maximumValidNFTs');
         return new BigNumber(result);
     }
     async minimumStake(): Promise<BigNumber>{
-        let result = await this.methods('minimumStake');
+        let result = await this.call('minimumStake');
         return new BigNumber(result);
     }
     async minted(param1:string): Promise<boolean>{
-        let result = await this.methods('minted',param1);
+        let result = await this.call('minted',[param1]);
         return result;
     }
     async name(): Promise<string>{
-        let result = await this.methods('name');
+        let result = await this.call('name');
         return result;
     }
     async newOwner(): Promise<string>{
-        let result = await this.methods('newOwner');
+        let result = await this.call('newOwner');
         return result;
     }
     async nftsEquipped(params:{param1:string,param2:number|BigNumber}): Promise<BigNumber>{
-        let result = await this.methods('nftsEquipped',params.param1,Utils.toString(params.param2));
+        let result = await this.call('nftsEquipped',[params.param1,Utils.toString(params.param2)]);
         return new BigNumber(result);
     }
     async owner(): Promise<string>{
-        let result = await this.methods('owner');
+        let result = await this.call('owner');
         return result;
     }
     async ownerOf(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.methods('ownerOf',Utils.toString(tokenId));
+        let result = await this.call('ownerOf',[Utils.toString(tokenId)]);
         return result;
     }
-    async permit(user:string): Promise<TransactionReceipt>{
-        let result = await this.methods('permit',user);
+    async permit_send(user:string): Promise<TransactionReceipt>{
+        let result = await this.send('permit',[user]);
         return result;
+    }
+    async permit_call(user:string): Promise<void>{
+        let result = await this.call('permit',[user]);
+        return;
+    }
+    permit: {
+        (user:string): Promise<TransactionReceipt>;
+        call: (user:string) => Promise<void>;
     }
     async protocolFee(): Promise<BigNumber>{
-        let result = await this.methods('protocolFee');
+        let result = await this.call('protocolFee');
         return new BigNumber(result);
     }
     async protocolFeeBalance(): Promise<BigNumber>{
-        let result = await this.methods('protocolFeeBalance');
+        let result = await this.call('protocolFeeBalance');
         return new BigNumber(result);
     }
     async protocolFeeTo(): Promise<string>{
-        let result = await this.methods('protocolFeeTo');
+        let result = await this.call('protocolFeeTo');
         return result;
     }
-    async rawFulfillRandomness(params:{requestId:string,randomness:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('rawFulfillRandomness',Utils.stringToBytes32(params.requestId),Utils.toString(params.randomness));
+    async rawFulfillRandomness_send(params:{requestId:string,randomness:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('rawFulfillRandomness',[Utils.stringToBytes32(params.requestId),Utils.toString(params.randomness)]);
         return result;
+    }
+    async rawFulfillRandomness_call(params:{requestId:string,randomness:number|BigNumber}): Promise<void>{
+        let result = await this.call('rawFulfillRandomness',[Utils.stringToBytes32(params.requestId),Utils.toString(params.randomness)]);
+        return;
+    }
+    rawFulfillRandomness: {
+        (params:{requestId:string,randomness:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{requestId:string,randomness:number|BigNumber}) => Promise<void>;
     }
     async requireApproval(): Promise<boolean>{
-        let result = await this.methods('requireApproval');
+        let result = await this.call('requireApproval');
         return result;
     }
-    async safeTransferFrom(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('safeTransferFrom',params.from,params.to,Utils.toString(params.tokenId));
+    async safeTransferFrom_send(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
         return result;
     }
-    async safeTransferFrom_1(params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<TransactionReceipt>{
-        let result = await this.methods('safeTransferFrom',params.from,params.to,Utils.toString(params.tokenId),params.data);
+    async safeTransferFrom_call(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<void>{
+        let result = await this.call('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
+        return;
+    }
+    safeTransferFrom: {
+        (params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{from:string,to:string,tokenId:number|BigNumber}) => Promise<void>;
+    }
+    async safeTransferFrom_1_send(params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<TransactionReceipt>{
+        let result = await this.send('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId),params.data]);
         return result;
     }
-    async setApprovalForAll(params:{operator:string,approved:boolean}): Promise<TransactionReceipt>{
-        let result = await this.methods('setApprovalForAll',params.operator,params.approved);
+    async safeTransferFrom_1_call(params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<void>{
+        let result = await this.call('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId),params.data]);
+        return;
+    }
+    safeTransferFrom_1: {
+        (params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<TransactionReceipt>;
+        call: (params:{from:string,to:string,tokenId:number|BigNumber,data:string}) => Promise<void>;
+    }
+    async setApprovalForAll_send(params:{operator:string,approved:boolean}): Promise<TransactionReceipt>{
+        let result = await this.send('setApprovalForAll',[params.operator,params.approved]);
         return result;
     }
-    async setApprovedStaker(params:{staker:string,allow:boolean}): Promise<TransactionReceipt>{
-        let result = await this.methods('setApprovedStaker',params.staker,params.allow);
+    async setApprovalForAll_call(params:{operator:string,approved:boolean}): Promise<void>{
+        let result = await this.call('setApprovalForAll',[params.operator,params.approved]);
+        return;
+    }
+    setApprovalForAll: {
+        (params:{operator:string,approved:boolean}): Promise<TransactionReceipt>;
+        call: (params:{operator:string,approved:boolean}) => Promise<void>;
+    }
+    async setApprovedStaker_send(params:{staker:string,allow:boolean}): Promise<TransactionReceipt>{
+        let result = await this.send('setApprovedStaker',[params.staker,params.allow]);
         return result;
     }
-    async setBaseURI(baseURI:string): Promise<TransactionReceipt>{
-        let result = await this.methods('setBaseURI',baseURI);
+    async setApprovedStaker_call(params:{staker:string,allow:boolean}): Promise<void>{
+        let result = await this.call('setApprovedStaker',[params.staker,params.allow]);
+        return;
+    }
+    setApprovedStaker: {
+        (params:{staker:string,allow:boolean}): Promise<TransactionReceipt>;
+        call: (params:{staker:string,allow:boolean}) => Promise<void>;
+    }
+    async setBaseURI_send(baseURI:string): Promise<TransactionReceipt>{
+        let result = await this.send('setBaseURI',[baseURI]);
         return result;
     }
-    async setCap(cap:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('setCap',Utils.toString(cap));
+    async setBaseURI_call(baseURI:string): Promise<void>{
+        let result = await this.call('setBaseURI',[baseURI]);
+        return;
+    }
+    setBaseURI: {
+        (baseURI:string): Promise<TransactionReceipt>;
+        call: (baseURI:string) => Promise<void>;
+    }
+    async setCap_send(cap:number|BigNumber): Promise<TransactionReceipt>{
+        let result = await this.send('setCap',[Utils.toString(cap)]);
         return result;
     }
-    async setCustomAttribute(params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('setCustomAttribute',Utils.toString(params.tokenId),Utils.toString(params.attribute));
+    async setCap_call(cap:number|BigNumber): Promise<void>{
+        let result = await this.call('setCap',[Utils.toString(cap)]);
+        return;
+    }
+    setCap: {
+        (cap:number|BigNumber): Promise<TransactionReceipt>;
+        call: (cap:number|BigNumber) => Promise<void>;
+    }
+    async setCustomAttribute_send(params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('setCustomAttribute',[Utils.toString(params.tokenId),Utils.toString(params.attribute)]);
         return result;
     }
-    async setMinimumStake(minimumStake:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('setMinimumStake',Utils.toString(minimumStake));
+    async setCustomAttribute_call(params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<void>{
+        let result = await this.call('setCustomAttribute',[Utils.toString(params.tokenId),Utils.toString(params.attribute)]);
+        return;
+    }
+    setCustomAttribute: {
+        (params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{tokenId:number|BigNumber,attribute:number|BigNumber}) => Promise<void>;
+    }
+    async setMinimumStake_send(minimumStake:number|BigNumber): Promise<TransactionReceipt>{
+        let result = await this.send('setMinimumStake',[Utils.toString(minimumStake)]);
         return result;
     }
-    async setProtocolFee(params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<TransactionReceipt>{
-        let result = await this.methods('setProtocolFee',Utils.toString(params.protocolFee),params.protocolFeeTo);
+    async setMinimumStake_call(minimumStake:number|BigNumber): Promise<void>{
+        let result = await this.call('setMinimumStake',[Utils.toString(minimumStake)]);
+        return;
+    }
+    setMinimumStake: {
+        (minimumStake:number|BigNumber): Promise<TransactionReceipt>;
+        call: (minimumStake:number|BigNumber) => Promise<void>;
+    }
+    async setProtocolFee_send(params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<TransactionReceipt>{
+        let result = await this.send('setProtocolFee',[Utils.toString(params.protocolFee),params.protocolFeeTo]);
         return result;
     }
-    async setVrfParams(params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('setVrfParams',Utils.stringToBytes32(params.vrfKeyHash),Utils.toString(params.vrfFee));
+    async setProtocolFee_call(params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<void>{
+        let result = await this.call('setProtocolFee',[Utils.toString(params.protocolFee),params.protocolFeeTo]);
+        return;
+    }
+    setProtocolFee: {
+        (params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<TransactionReceipt>;
+        call: (params:{protocolFee:number|BigNumber,protocolFeeTo:string}) => Promise<void>;
+    }
+    async setVrfParams_send(params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('setVrfParams',[Utils.stringToBytes32(params.vrfKeyHash),Utils.toString(params.vrfFee)]);
         return result;
     }
-    async stake(amount:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('stake',Utils.toString(amount));
+    async setVrfParams_call(params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<void>{
+        let result = await this.call('setVrfParams',[Utils.stringToBytes32(params.vrfKeyHash),Utils.toString(params.vrfFee)]);
+        return;
+    }
+    setVrfParams: {
+        (params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{vrfKeyHash:string,vrfFee:number|BigNumber}) => Promise<void>;
+    }
+    async stake_send(amount:number|BigNumber): Promise<TransactionReceipt>{
+        let result = await this.send('stake',[Utils.toString(amount)]);
         return result;
+    }
+    async stake_call(amount:number|BigNumber): Promise<BigNumber>{
+        let result = await this.call('stake',[Utils.toString(amount)]);
+        return new BigNumber(result);
+    }
+    stake: {
+        (amount:number|BigNumber): Promise<TransactionReceipt>;
+        call: (amount:number|BigNumber) => Promise<BigNumber>;
     }
     async stakeToken(): Promise<string>{
-        let result = await this.methods('stakeToken');
+        let result = await this.call('stakeToken');
         return result;
     }
     async stakingBalance(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('stakingBalance',Utils.toString(param1));
+        let result = await this.call('stakingBalance',[Utils.toString(param1)]);
         return new BigNumber(result);
     }
     async supportsInterface(interfaceId:string): Promise<boolean>{
-        let result = await this.methods('supportsInterface',interfaceId);
+        let result = await this.call('supportsInterface',[interfaceId]);
         return result;
     }
     async symbol(): Promise<string>{
-        let result = await this.methods('symbol');
+        let result = await this.call('symbol');
         return result;
     }
-    async takeOwnership(): Promise<TransactionReceipt>{
-        let result = await this.methods('takeOwnership');
+    async takeOwnership_send(): Promise<TransactionReceipt>{
+        let result = await this.send('takeOwnership');
         return result;
+    }
+    async takeOwnership_call(): Promise<void>{
+        let result = await this.call('takeOwnership');
+        return;
+    }
+    takeOwnership: {
+        (): Promise<TransactionReceipt>;
+        call: () => Promise<void>;
     }
     async tokenByIndex(index:number|BigNumber): Promise<BigNumber>{
-        let result = await this.methods('tokenByIndex',Utils.toString(index));
+        let result = await this.call('tokenByIndex',[Utils.toString(index)]);
         return new BigNumber(result);
     }
     async tokenOfOwnerByIndex(params:{owner:string,index:number|BigNumber}): Promise<BigNumber>{
-        let result = await this.methods('tokenOfOwnerByIndex',params.owner,Utils.toString(params.index));
+        let result = await this.call('tokenOfOwnerByIndex',[params.owner,Utils.toString(params.index)]);
         return new BigNumber(result);
     }
     async tokenURI(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.methods('tokenURI',Utils.toString(tokenId));
+        let result = await this.call('tokenURI',[Utils.toString(tokenId)]);
         return result;
     }
     async totalSupply(): Promise<BigNumber>{
-        let result = await this.methods('totalSupply');
+        let result = await this.call('totalSupply');
         return new BigNumber(result);
     }
-    async transferFrom(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('transferFrom',params.from,params.to,Utils.toString(params.tokenId));
+    async transferFrom_send(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('transferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
         return result;
     }
-    async transferOwnership(newOwner:string): Promise<TransactionReceipt>{
-        let result = await this.methods('transferOwnership',newOwner);
+    async transferFrom_call(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<void>{
+        let result = await this.call('transferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
+        return;
+    }
+    transferFrom: {
+        (params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{from:string,to:string,tokenId:number|BigNumber}) => Promise<void>;
+    }
+    async transferOwnership_send(newOwner:string): Promise<TransactionReceipt>{
+        let result = await this.send('transferOwnership',[newOwner]);
         return result;
     }
-    async transferProtocolFee(): Promise<TransactionReceipt>{
-        let result = await this.methods('transferProtocolFee');
+    async transferOwnership_call(newOwner:string): Promise<void>{
+        let result = await this.call('transferOwnership',[newOwner]);
+        return;
+    }
+    transferOwnership: {
+        (newOwner:string): Promise<TransactionReceipt>;
+        call: (newOwner:string) => Promise<void>;
+    }
+    async transferProtocolFee_send(): Promise<TransactionReceipt>{
+        let result = await this.send('transferProtocolFee');
         return result;
+    }
+    async transferProtocolFee_call(): Promise<void>{
+        let result = await this.call('transferProtocolFee');
+        return;
+    }
+    transferProtocolFee: {
+        (): Promise<TransactionReceipt>;
+        call: () => Promise<void>;
     }
     async trollOwnedNFTs(params:{param1:number|BigNumber,param2:string}): Promise<BigNumber>{
-        let result = await this.methods('trollOwnedNFTs',Utils.toString(params.param1),params.param2);
+        let result = await this.call('trollOwnedNFTs',[Utils.toString(params.param1),params.param2]);
         return new BigNumber(result);
     }
-    async unequipNFT(params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.methods('unequipNFT',Utils.toString(params.trollId),params.nft,Utils.toString(params.nftId));
+    async unequipNFT_send(params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<TransactionReceipt>{
+        let result = await this.send('unequipNFT',[Utils.toString(params.trollId),params.nft,Utils.toString(params.nftId)]);
         return result;
     }
-    async unstake(tokenId:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('unstake',Utils.toString(tokenId));
+    async unequipNFT_call(params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<void>{
+        let result = await this.call('unequipNFT',[Utils.toString(params.trollId),params.nft,Utils.toString(params.nftId)]);
+        return;
+    }
+    unequipNFT: {
+        (params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}): Promise<TransactionReceipt>;
+        call: (params:{trollId:number|BigNumber,nft:string,nftId:number|BigNumber}) => Promise<void>;
+    }
+    async unstake_send(tokenId:number|BigNumber): Promise<TransactionReceipt>{
+        let result = await this.send('unstake',[Utils.toString(tokenId)]);
         return result;
+    }
+    async unstake_call(tokenId:number|BigNumber): Promise<void>{
+        let result = await this.call('unstake',[Utils.toString(tokenId)]);
+        return;
+    }
+    unstake: {
+        (tokenId:number|BigNumber): Promise<TransactionReceipt>;
+        call: (tokenId:number|BigNumber) => Promise<void>;
     }
     async validNFTsLength(): Promise<BigNumber>{
-        let result = await this.methods('validNFTsLength');
+        let result = await this.call('validNFTsLength');
         return new BigNumber(result);
     }
-    async withdrawLink(amount:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.methods('withdrawLink',Utils.toString(amount));
+    async withdrawLink_send(amount:number|BigNumber): Promise<TransactionReceipt>{
+        let result = await this.send('withdrawLink',[Utils.toString(amount)]);
         return result;
+    }
+    async withdrawLink_call(amount:number|BigNumber): Promise<void>{
+        let result = await this.call('withdrawLink',[Utils.toString(amount)]);
+        return;
+    }
+    withdrawLink: {
+        (amount:number|BigNumber): Promise<TransactionReceipt>;
+        call: (amount:number|BigNumber) => Promise<void>;
+    }
+    private assign(){
+        this.addStakes = Object.assign(this.addStakes_send, {call:this.addStakes_call});
+        this.addValidNFTs = Object.assign(this.addValidNFTs_send, {call:this.addValidNFTs_call});
+        this.approve = Object.assign(this.approve_send, {call:this.approve_call});
+        this.batchApprove = Object.assign(this.batchApprove_send, {call:this.batchApprove_call});
+        this.deny = Object.assign(this.deny_send, {call:this.deny_call});
+        this.equipNFT = Object.assign(this.equipNFT_send, {call:this.equipNFT_call});
+        this.permit = Object.assign(this.permit_send, {call:this.permit_call});
+        this.rawFulfillRandomness = Object.assign(this.rawFulfillRandomness_send, {call:this.rawFulfillRandomness_call});
+        this.safeTransferFrom = Object.assign(this.safeTransferFrom_send, {call:this.safeTransferFrom_call});
+        this.safeTransferFrom_1 = Object.assign(this.safeTransferFrom_1_send, {call:this.safeTransferFrom_1_call});
+        this.setApprovalForAll = Object.assign(this.setApprovalForAll_send, {call:this.setApprovalForAll_call});
+        this.setApprovedStaker = Object.assign(this.setApprovedStaker_send, {call:this.setApprovedStaker_call});
+        this.setBaseURI = Object.assign(this.setBaseURI_send, {call:this.setBaseURI_call});
+        this.setCap = Object.assign(this.setCap_send, {call:this.setCap_call});
+        this.setCustomAttribute = Object.assign(this.setCustomAttribute_send, {call:this.setCustomAttribute_call});
+        this.setMinimumStake = Object.assign(this.setMinimumStake_send, {call:this.setMinimumStake_call});
+        this.setProtocolFee = Object.assign(this.setProtocolFee_send, {call:this.setProtocolFee_call});
+        this.setVrfParams = Object.assign(this.setVrfParams_send, {call:this.setVrfParams_call});
+        this.stake = Object.assign(this.stake_send, {call:this.stake_call});
+        this.takeOwnership = Object.assign(this.takeOwnership_send, {call:this.takeOwnership_call});
+        this.transferFrom = Object.assign(this.transferFrom_send, {call:this.transferFrom_call});
+        this.transferOwnership = Object.assign(this.transferOwnership_send, {call:this.transferOwnership_call});
+        this.transferProtocolFee = Object.assign(this.transferProtocolFee_send, {call:this.transferProtocolFee_call});
+        this.unequipNFT = Object.assign(this.unequipNFT_send, {call:this.unequipNFT_call});
+        this.unstake = Object.assign(this.unstake_send, {call:this.unstake_call});
+        this.withdrawLink = Object.assign(this.withdrawLink_send, {call:this.withdrawLink_call});
     }
 }
 export module TrollNFT_VRFV2{
-    export interface AddStakesEvent {_event:Event,tokenId:BigNumber,amountAdded:BigNumber,newAmount:BigNumber}
-    export interface AddValidNFTEvent {_event:Event,nft:string}
-    export interface ApprovalEvent {_event:Event,owner:string,approved:string,tokenId:BigNumber}
-    export interface ApprovalForAllEvent {_event:Event,owner:string,operator:string,approved:boolean}
-    export interface ApprovedStakerEvent {_event:Event,staker:string,allow:boolean}
-    export interface AttributeEvent {_event:Event,tokenId:BigNumber,attribute:BigNumber}
-    export interface AuthorizeEvent {_event:Event,user:string}
-    export interface BaseURIEvent {_event:Event,baseURI:string}
-    export interface CapEvent {_event:Event,cap:BigNumber}
-    export interface CustomAttributeEvent {_event:Event,tokenId:BigNumber,attribute:BigNumber}
-    export interface DeauthorizeEvent {_event:Event,user:string}
-    export interface EquipNFTEvent {_event:Event,trollId:BigNumber,nft:string,nftId:BigNumber}
-    export interface MinimumStakeEvent {_event:Event,minimumStake:BigNumber}
-    export interface ProtocolFeeEvent {_event:Event,protocolFee:BigNumber,protocolFeeTo:string}
-    export interface StakeEvent {_event:Event,who:string,tokenId:BigNumber,amount:BigNumber}
-    export interface StakesApprovalEvent {_event:Event,fromTokenId:BigNumber,spender:string,amount:BigNumber}
-    export interface StakesTransferEvent {_event:Event,fromTokenId:BigNumber,toTokenId:BigNumber,amount:BigNumber}
-    export interface StartOwnershipTransferEvent {_event:Event,user:string}
-    export interface TransferEvent {_event:Event,from:string,to:string,tokenId:BigNumber}
-    export interface TransferOwnershipEvent {_event:Event,user:string}
-    export interface UnequipNFTEvent {_event:Event,trollId:BigNumber,nft:string,nftId:BigNumber}
-    export interface UnstakeEvent {_event:Event,who:string,tokenId:BigNumber,amount:BigNumber}
+    export interface AddStakesEvent {tokenId:BigNumber,amountAdded:BigNumber,newAmount:BigNumber,_event:Event}
+    export interface AddValidNFTEvent {nft:string,_event:Event}
+    export interface ApprovalEvent {owner:string,approved:string,tokenId:BigNumber,_event:Event}
+    export interface ApprovalForAllEvent {owner:string,operator:string,approved:boolean,_event:Event}
+    export interface ApprovedStakerEvent {staker:string,allow:boolean,_event:Event}
+    export interface AttributeEvent {tokenId:BigNumber,attribute:BigNumber,_event:Event}
+    export interface AuthorizeEvent {user:string,_event:Event}
+    export interface BaseURIEvent {baseURI:string,_event:Event}
+    export interface CapEvent {cap:BigNumber,_event:Event}
+    export interface CustomAttributeEvent {tokenId:BigNumber,attribute:BigNumber,_event:Event}
+    export interface DeauthorizeEvent {user:string,_event:Event}
+    export interface EquipNFTEvent {trollId:BigNumber,nft:string,nftId:BigNumber,_event:Event}
+    export interface MinimumStakeEvent {minimumStake:BigNumber,_event:Event}
+    export interface ProtocolFeeEvent {protocolFee:BigNumber,protocolFeeTo:string,_event:Event}
+    export interface StakeEvent {who:string,tokenId:BigNumber,amount:BigNumber,_event:Event}
+    export interface StakesApprovalEvent {fromTokenId:BigNumber,spender:string,amount:BigNumber,_event:Event}
+    export interface StakesTransferEvent {fromTokenId:BigNumber,toTokenId:BigNumber,amount:BigNumber,_event:Event}
+    export interface StartOwnershipTransferEvent {user:string,_event:Event}
+    export interface TransferEvent {from:string,to:string,tokenId:BigNumber,_event:Event}
+    export interface TransferOwnershipEvent {user:string,_event:Event}
+    export interface UnequipNFTEvent {trollId:BigNumber,nft:string,nftId:BigNumber,_event:Event}
+    export interface UnstakeEvent {who:string,tokenId:BigNumber,amount:BigNumber,_event:Event}
 }

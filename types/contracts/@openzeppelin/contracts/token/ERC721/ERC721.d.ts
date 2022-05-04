@@ -1,6 +1,6 @@
-import { Wallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
+import { IWallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
 export declare class ERC721 extends Contract {
-    constructor(wallet: Wallet, address?: string);
+    constructor(wallet: IWallet, address?: string);
     deploy(params: {
         name: string;
         symbol: string;
@@ -11,10 +11,24 @@ export declare class ERC721 extends Contract {
     decodeApprovalForAllEvent(event: Event): ERC721.ApprovalForAllEvent;
     parseTransferEvent(receipt: TransactionReceipt): ERC721.TransferEvent[];
     decodeTransferEvent(event: Event): ERC721.TransferEvent;
-    approve(params: {
+    approve_send(params: {
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
+    approve_call(params: {
+        to: string;
+        tokenId: number | BigNumber;
+    }): Promise<void>;
+    approve: {
+        (params: {
+            to: string;
+            tokenId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            to: string;
+            tokenId: number | BigNumber;
+        }) => Promise<void>;
+    };
     balanceOf(owner: string): Promise<BigNumber>;
     getApproved(tokenId: number | BigNumber): Promise<string>;
     isApprovedForAll(params: {
@@ -23,47 +37,116 @@ export declare class ERC721 extends Contract {
     }): Promise<boolean>;
     name(): Promise<string>;
     ownerOf(tokenId: number | BigNumber): Promise<string>;
-    safeTransferFrom(params: {
+    safeTransferFrom_send(params: {
         from: string;
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
-    safeTransferFrom_1(params: {
+    safeTransferFrom_call(params: {
+        from: string;
+        to: string;
+        tokenId: number | BigNumber;
+    }): Promise<void>;
+    safeTransferFrom: {
+        (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }) => Promise<void>;
+    };
+    safeTransferFrom_1_send(params: {
         from: string;
         to: string;
         tokenId: number | BigNumber;
         data: string;
     }): Promise<TransactionReceipt>;
-    setApprovalForAll(params: {
+    safeTransferFrom_1_call(params: {
+        from: string;
+        to: string;
+        tokenId: number | BigNumber;
+        data: string;
+    }): Promise<void>;
+    safeTransferFrom_1: {
+        (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+            data: string;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+            data: string;
+        }) => Promise<void>;
+    };
+    setApprovalForAll_send(params: {
         operator: string;
         approved: boolean;
     }): Promise<TransactionReceipt>;
+    setApprovalForAll_call(params: {
+        operator: string;
+        approved: boolean;
+    }): Promise<void>;
+    setApprovalForAll: {
+        (params: {
+            operator: string;
+            approved: boolean;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            operator: string;
+            approved: boolean;
+        }) => Promise<void>;
+    };
     supportsInterface(interfaceId: string): Promise<boolean>;
     symbol(): Promise<string>;
     tokenURI(tokenId: number | BigNumber): Promise<string>;
-    transferFrom(params: {
+    transferFrom_send(params: {
         from: string;
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
+    transferFrom_call(params: {
+        from: string;
+        to: string;
+        tokenId: number | BigNumber;
+    }): Promise<void>;
+    transferFrom: {
+        (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }) => Promise<void>;
+    };
+    private assign;
 }
 export declare module ERC721 {
     interface ApprovalEvent {
-        _event: Event;
         owner: string;
         approved: string;
         tokenId: BigNumber;
+        _event: Event;
     }
     interface ApprovalForAllEvent {
-        _event: Event;
         owner: string;
         operator: string;
         approved: boolean;
+        _event: Event;
     }
     interface TransferEvent {
-        _event: Event;
         from: string;
         to: string;
         tokenId: BigNumber;
+        _event: Event;
     }
 }

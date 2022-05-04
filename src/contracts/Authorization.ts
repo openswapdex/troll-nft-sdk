@@ -1,9 +1,10 @@
-import {Wallet, Contract, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
-const Bin = require("../../bin/Authorization.json");
+import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
+import Bin from "./Authorization.json";
 
 export class Authorization extends Contract{
-    constructor(wallet: Wallet, address?: string){
+    constructor(wallet: IWallet, address?: string){
         super(wallet, address, Bin.abi, Bin.bytecode);
+        this.assign()
     }
     deploy(): Promise<string>{
         return this._deploy();
@@ -14,8 +15,8 @@ export class Authorization extends Contract{
     decodeAuthorizeEvent(event: Event): Authorization.AuthorizeEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseDeauthorizeEvent(receipt: TransactionReceipt): Authorization.DeauthorizeEvent[]{
@@ -24,8 +25,8 @@ export class Authorization extends Contract{
     decodeDeauthorizeEvent(event: Event): Authorization.DeauthorizeEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseStartOwnershipTransferEvent(receipt: TransactionReceipt): Authorization.StartOwnershipTransferEvent[]{
@@ -34,8 +35,8 @@ export class Authorization extends Contract{
     decodeStartOwnershipTransferEvent(event: Event): Authorization.StartOwnershipTransferEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
     parseTransferOwnershipEvent(receipt: TransactionReceipt): Authorization.TransferOwnershipEvent[]{
@@ -44,42 +45,80 @@ export class Authorization extends Contract{
     decodeTransferOwnershipEvent(event: Event): Authorization.TransferOwnershipEvent{
         let result = event.data;
         return {
-            _event:event,
-            user: result.user
+            user: result.user,
+            _event: event
         };
     }
-    async deny(user:string): Promise<TransactionReceipt>{
-        let result = await this.methods('deny',user);
+    async deny_send(user:string): Promise<TransactionReceipt>{
+        let result = await this.send('deny',[user]);
         return result;
     }
+    async deny_call(user:string): Promise<void>{
+        let result = await this.call('deny',[user]);
+        return;
+    }
+    deny: {
+        (user:string): Promise<TransactionReceipt>;
+        call: (user:string) => Promise<void>;
+    }
     async isPermitted(param1:string): Promise<boolean>{
-        let result = await this.methods('isPermitted',param1);
+        let result = await this.call('isPermitted',[param1]);
         return result;
     }
     async newOwner(): Promise<string>{
-        let result = await this.methods('newOwner');
+        let result = await this.call('newOwner');
         return result;
     }
     async owner(): Promise<string>{
-        let result = await this.methods('owner');
+        let result = await this.call('owner');
         return result;
     }
-    async permit(user:string): Promise<TransactionReceipt>{
-        let result = await this.methods('permit',user);
+    async permit_send(user:string): Promise<TransactionReceipt>{
+        let result = await this.send('permit',[user]);
         return result;
     }
-    async takeOwnership(): Promise<TransactionReceipt>{
-        let result = await this.methods('takeOwnership');
+    async permit_call(user:string): Promise<void>{
+        let result = await this.call('permit',[user]);
+        return;
+    }
+    permit: {
+        (user:string): Promise<TransactionReceipt>;
+        call: (user:string) => Promise<void>;
+    }
+    async takeOwnership_send(): Promise<TransactionReceipt>{
+        let result = await this.send('takeOwnership');
         return result;
     }
-    async transferOwnership(newOwner:string): Promise<TransactionReceipt>{
-        let result = await this.methods('transferOwnership',newOwner);
+    async takeOwnership_call(): Promise<void>{
+        let result = await this.call('takeOwnership');
+        return;
+    }
+    takeOwnership: {
+        (): Promise<TransactionReceipt>;
+        call: () => Promise<void>;
+    }
+    async transferOwnership_send(newOwner:string): Promise<TransactionReceipt>{
+        let result = await this.send('transferOwnership',[newOwner]);
         return result;
+    }
+    async transferOwnership_call(newOwner:string): Promise<void>{
+        let result = await this.call('transferOwnership',[newOwner]);
+        return;
+    }
+    transferOwnership: {
+        (newOwner:string): Promise<TransactionReceipt>;
+        call: (newOwner:string) => Promise<void>;
+    }
+    private assign(){
+        this.deny = Object.assign(this.deny_send, {call:this.deny_call});
+        this.permit = Object.assign(this.permit_send, {call:this.permit_call});
+        this.takeOwnership = Object.assign(this.takeOwnership_send, {call:this.takeOwnership_call});
+        this.transferOwnership = Object.assign(this.transferOwnership_send, {call:this.transferOwnership_call});
     }
 }
 export module Authorization{
-    export interface AuthorizeEvent {_event:Event,user:string}
-    export interface DeauthorizeEvent {_event:Event,user:string}
-    export interface StartOwnershipTransferEvent {_event:Event,user:string}
-    export interface TransferOwnershipEvent {_event:Event,user:string}
+    export interface AuthorizeEvent {user:string,_event:Event}
+    export interface DeauthorizeEvent {user:string,_event:Event}
+    export interface StartOwnershipTransferEvent {user:string,_event:Event}
+    export interface TransferOwnershipEvent {user:string,_event:Event}
 }

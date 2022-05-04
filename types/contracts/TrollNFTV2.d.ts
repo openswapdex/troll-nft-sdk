@@ -1,6 +1,6 @@
-import { Wallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
+import { IWallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
 export declare class TrollNFTV2 extends Contract {
-    constructor(wallet: Wallet, address?: string);
+    constructor(wallet: IWallet, address?: string);
     deploy(params: {
         name: string;
         symbol: string;
@@ -66,29 +66,89 @@ export declare class TrollNFTV2 extends Contract {
         param1: number | BigNumber;
         param2: string;
     }): Promise<BigNumber>;
-    addStakes(params: {
+    addStakes_send(params: {
         tokenId: number | BigNumber;
         amount: number | BigNumber;
     }): Promise<TransactionReceipt>;
-    addValidNFTs(nfts: string[]): Promise<TransactionReceipt>;
-    approve(params: {
+    addStakes_call(params: {
+        tokenId: number | BigNumber;
+        amount: number | BigNumber;
+    }): Promise<void>;
+    addStakes: {
+        (params: {
+            tokenId: number | BigNumber;
+            amount: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            tokenId: number | BigNumber;
+            amount: number | BigNumber;
+        }) => Promise<void>;
+    };
+    addValidNFTs_send(nfts: string[]): Promise<TransactionReceipt>;
+    addValidNFTs_call(nfts: string[]): Promise<void>;
+    addValidNFTs: {
+        (nfts: string[]): Promise<TransactionReceipt>;
+        call: (nfts: string[]) => Promise<void>;
+    };
+    approve_send(params: {
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
+    approve_call(params: {
+        to: string;
+        tokenId: number | BigNumber;
+    }): Promise<void>;
+    approve: {
+        (params: {
+            to: string;
+            tokenId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            to: string;
+            tokenId: number | BigNumber;
+        }) => Promise<void>;
+    };
     approvedStaker(param1: string): Promise<boolean>;
     balanceOf(owner: string): Promise<BigNumber>;
     baseURI(): Promise<string>;
-    batchApprove(stakers: string[]): Promise<TransactionReceipt>;
+    batchApprove_send(stakers: string[]): Promise<TransactionReceipt>;
+    batchApprove_call(stakers: string[]): Promise<void>;
+    batchApprove: {
+        (stakers: string[]): Promise<TransactionReceipt>;
+        call: (stakers: string[]) => Promise<void>;
+    };
     cap(): Promise<BigNumber>;
     counter(): Promise<BigNumber>;
     creationDate(param1: number | BigNumber): Promise<BigNumber>;
-    deny(user: string): Promise<TransactionReceipt>;
+    deny_send(user: string): Promise<TransactionReceipt>;
+    deny_call(user: string): Promise<void>;
+    deny: {
+        (user: string): Promise<TransactionReceipt>;
+        call: (user: string) => Promise<void>;
+    };
     destoryDate(param1: number | BigNumber): Promise<BigNumber>;
-    equipNFT(params: {
+    equipNFT_send(params: {
         trollId: number | BigNumber;
         nft: string;
         nftId: number | BigNumber;
     }): Promise<TransactionReceipt>;
+    equipNFT_call(params: {
+        trollId: number | BigNumber;
+        nft: string;
+        nftId: number | BigNumber;
+    }): Promise<void>;
+    equipNFT: {
+        (params: {
+            trollId: number | BigNumber;
+            nft: string;
+            nftId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            trollId: number | BigNumber;
+            nft: string;
+            nftId: number | BigNumber;
+        }) => Promise<void>;
+    };
     extraStakes(param1: number | BigNumber): Promise<BigNumber>;
     getApproved(tokenId: number | BigNumber): Promise<string>;
     getAttributes1(params: {
@@ -121,47 +181,170 @@ export declare class TrollNFTV2 extends Contract {
     }): Promise<BigNumber>;
     owner(): Promise<string>;
     ownerOf(tokenId: number | BigNumber): Promise<string>;
-    permit(user: string): Promise<TransactionReceipt>;
+    permit_send(user: string): Promise<TransactionReceipt>;
+    permit_call(user: string): Promise<void>;
+    permit: {
+        (user: string): Promise<TransactionReceipt>;
+        call: (user: string) => Promise<void>;
+    };
     protocolFee(): Promise<BigNumber>;
     protocolFeeBalance(): Promise<BigNumber>;
     protocolFeeTo(): Promise<string>;
     requireApproval(): Promise<boolean>;
-    safeTransferFrom(params: {
+    safeTransferFrom_send(params: {
         from: string;
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
-    safeTransferFrom_1(params: {
+    safeTransferFrom_call(params: {
+        from: string;
+        to: string;
+        tokenId: number | BigNumber;
+    }): Promise<void>;
+    safeTransferFrom: {
+        (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }) => Promise<void>;
+    };
+    safeTransferFrom_1_send(params: {
         from: string;
         to: string;
         tokenId: number | BigNumber;
         data: string;
     }): Promise<TransactionReceipt>;
-    setApprovalForAll(params: {
+    safeTransferFrom_1_call(params: {
+        from: string;
+        to: string;
+        tokenId: number | BigNumber;
+        data: string;
+    }): Promise<void>;
+    safeTransferFrom_1: {
+        (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+            data: string;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+            data: string;
+        }) => Promise<void>;
+    };
+    setApprovalForAll_send(params: {
         operator: string;
         approved: boolean;
     }): Promise<TransactionReceipt>;
-    setApprovedStaker(params: {
+    setApprovalForAll_call(params: {
+        operator: string;
+        approved: boolean;
+    }): Promise<void>;
+    setApprovalForAll: {
+        (params: {
+            operator: string;
+            approved: boolean;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            operator: string;
+            approved: boolean;
+        }) => Promise<void>;
+    };
+    setApprovedStaker_send(params: {
         staker: string;
         allow: boolean;
     }): Promise<TransactionReceipt>;
-    setBaseURI(baseURI: string): Promise<TransactionReceipt>;
-    setCap(cap: number | BigNumber): Promise<TransactionReceipt>;
-    setCustomAttribute(params: {
+    setApprovedStaker_call(params: {
+        staker: string;
+        allow: boolean;
+    }): Promise<void>;
+    setApprovedStaker: {
+        (params: {
+            staker: string;
+            allow: boolean;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            staker: string;
+            allow: boolean;
+        }) => Promise<void>;
+    };
+    setBaseURI_send(baseURI: string): Promise<TransactionReceipt>;
+    setBaseURI_call(baseURI: string): Promise<void>;
+    setBaseURI: {
+        (baseURI: string): Promise<TransactionReceipt>;
+        call: (baseURI: string) => Promise<void>;
+    };
+    setCap_send(cap: number | BigNumber): Promise<TransactionReceipt>;
+    setCap_call(cap: number | BigNumber): Promise<void>;
+    setCap: {
+        (cap: number | BigNumber): Promise<TransactionReceipt>;
+        call: (cap: number | BigNumber) => Promise<void>;
+    };
+    setCustomAttribute_send(params: {
         tokenId: number | BigNumber;
         attribute: number | BigNumber;
     }): Promise<TransactionReceipt>;
-    setMinimumStake(minimumStake: number | BigNumber): Promise<TransactionReceipt>;
-    setProtocolFee(params: {
+    setCustomAttribute_call(params: {
+        tokenId: number | BigNumber;
+        attribute: number | BigNumber;
+    }): Promise<void>;
+    setCustomAttribute: {
+        (params: {
+            tokenId: number | BigNumber;
+            attribute: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            tokenId: number | BigNumber;
+            attribute: number | BigNumber;
+        }) => Promise<void>;
+    };
+    setMinimumStake_send(minimumStake: number | BigNumber): Promise<TransactionReceipt>;
+    setMinimumStake_call(minimumStake: number | BigNumber): Promise<void>;
+    setMinimumStake: {
+        (minimumStake: number | BigNumber): Promise<TransactionReceipt>;
+        call: (minimumStake: number | BigNumber) => Promise<void>;
+    };
+    setProtocolFee_send(params: {
         protocolFee: number | BigNumber;
         protocolFeeTo: string;
     }): Promise<TransactionReceipt>;
-    stake(amount: number | BigNumber): Promise<TransactionReceipt>;
+    setProtocolFee_call(params: {
+        protocolFee: number | BigNumber;
+        protocolFeeTo: string;
+    }): Promise<void>;
+    setProtocolFee: {
+        (params: {
+            protocolFee: number | BigNumber;
+            protocolFeeTo: string;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            protocolFee: number | BigNumber;
+            protocolFeeTo: string;
+        }) => Promise<void>;
+    };
+    stake_send(amount: number | BigNumber): Promise<TransactionReceipt>;
+    stake_call(amount: number | BigNumber): Promise<BigNumber>;
+    stake: {
+        (amount: number | BigNumber): Promise<TransactionReceipt>;
+        call: (amount: number | BigNumber) => Promise<BigNumber>;
+    };
     stakeToken(): Promise<string>;
     stakingBalance(param1: number | BigNumber): Promise<BigNumber>;
     supportsInterface(interfaceId: string): Promise<boolean>;
     symbol(): Promise<string>;
-    takeOwnership(): Promise<TransactionReceipt>;
+    takeOwnership_send(): Promise<TransactionReceipt>;
+    takeOwnership_call(): Promise<void>;
+    takeOwnership: {
+        (): Promise<TransactionReceipt>;
+        call: () => Promise<void>;
+    };
     tokenByIndex(index: number | BigNumber): Promise<BigNumber>;
     tokenOfOwnerByIndex(params: {
         owner: string;
@@ -169,136 +352,186 @@ export declare class TrollNFTV2 extends Contract {
     }): Promise<BigNumber>;
     tokenURI(tokenId: number | BigNumber): Promise<string>;
     totalSupply(): Promise<BigNumber>;
-    transferFrom(params: {
+    transferFrom_send(params: {
         from: string;
         to: string;
         tokenId: number | BigNumber;
     }): Promise<TransactionReceipt>;
-    transferOwnership(newOwner: string): Promise<TransactionReceipt>;
-    transferProtocolFee(): Promise<TransactionReceipt>;
+    transferFrom_call(params: {
+        from: string;
+        to: string;
+        tokenId: number | BigNumber;
+    }): Promise<void>;
+    transferFrom: {
+        (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            from: string;
+            to: string;
+            tokenId: number | BigNumber;
+        }) => Promise<void>;
+    };
+    transferOwnership_send(newOwner: string): Promise<TransactionReceipt>;
+    transferOwnership_call(newOwner: string): Promise<void>;
+    transferOwnership: {
+        (newOwner: string): Promise<TransactionReceipt>;
+        call: (newOwner: string) => Promise<void>;
+    };
+    transferProtocolFee_send(): Promise<TransactionReceipt>;
+    transferProtocolFee_call(): Promise<void>;
+    transferProtocolFee: {
+        (): Promise<TransactionReceipt>;
+        call: () => Promise<void>;
+    };
     trollOwnedNFTs(params: {
         param1: number | BigNumber;
         param2: string;
     }): Promise<BigNumber>;
-    unequipNFT(params: {
+    unequipNFT_send(params: {
         trollId: number | BigNumber;
         nft: string;
         nftId: number | BigNumber;
     }): Promise<TransactionReceipt>;
-    unstake(tokenId: number | BigNumber): Promise<TransactionReceipt>;
+    unequipNFT_call(params: {
+        trollId: number | BigNumber;
+        nft: string;
+        nftId: number | BigNumber;
+    }): Promise<void>;
+    unequipNFT: {
+        (params: {
+            trollId: number | BigNumber;
+            nft: string;
+            nftId: number | BigNumber;
+        }): Promise<TransactionReceipt>;
+        call: (params: {
+            trollId: number | BigNumber;
+            nft: string;
+            nftId: number | BigNumber;
+        }) => Promise<void>;
+    };
+    unstake_send(tokenId: number | BigNumber): Promise<TransactionReceipt>;
+    unstake_call(tokenId: number | BigNumber): Promise<void>;
+    unstake: {
+        (tokenId: number | BigNumber): Promise<TransactionReceipt>;
+        call: (tokenId: number | BigNumber) => Promise<void>;
+    };
     validNFTsLength(): Promise<BigNumber>;
+    private assign;
 }
 export declare module TrollNFTV2 {
     interface AddStakesEvent {
-        _event: Event;
         tokenId: BigNumber;
         amountAdded: BigNumber;
         newAmount: BigNumber;
+        _event: Event;
     }
     interface AddValidNFTEvent {
-        _event: Event;
         nft: string;
+        _event: Event;
     }
     interface ApprovalEvent {
-        _event: Event;
         owner: string;
         approved: string;
         tokenId: BigNumber;
+        _event: Event;
     }
     interface ApprovalForAllEvent {
-        _event: Event;
         owner: string;
         operator: string;
         approved: boolean;
+        _event: Event;
     }
     interface ApprovedStakerEvent {
-        _event: Event;
         staker: string;
         allow: boolean;
+        _event: Event;
     }
     interface AttributeEvent {
-        _event: Event;
         tokenId: BigNumber;
         attribute: BigNumber;
+        _event: Event;
     }
     interface AuthorizeEvent {
-        _event: Event;
         user: string;
+        _event: Event;
     }
     interface BaseURIEvent {
-        _event: Event;
         baseURI: string;
+        _event: Event;
     }
     interface CapEvent {
-        _event: Event;
         cap: BigNumber;
+        _event: Event;
     }
     interface CustomAttributeEvent {
-        _event: Event;
         tokenId: BigNumber;
         attribute: BigNumber;
+        _event: Event;
     }
     interface DeauthorizeEvent {
-        _event: Event;
         user: string;
+        _event: Event;
     }
     interface EquipNFTEvent {
-        _event: Event;
         trollId: BigNumber;
         nft: string;
         nftId: BigNumber;
+        _event: Event;
     }
     interface MinimumStakeEvent {
-        _event: Event;
         minimumStake: BigNumber;
+        _event: Event;
     }
     interface ProtocolFeeEvent {
-        _event: Event;
         protocolFee: BigNumber;
         protocolFeeTo: string;
+        _event: Event;
     }
     interface StakeEvent {
-        _event: Event;
         who: string;
         tokenId: BigNumber;
         amount: BigNumber;
+        _event: Event;
     }
     interface StakesApprovalEvent {
-        _event: Event;
         fromTokenId: BigNumber;
         spender: string;
         amount: BigNumber;
+        _event: Event;
     }
     interface StakesTransferEvent {
-        _event: Event;
         fromTokenId: BigNumber;
         toTokenId: BigNumber;
         amount: BigNumber;
+        _event: Event;
     }
     interface StartOwnershipTransferEvent {
-        _event: Event;
         user: string;
+        _event: Event;
     }
     interface TransferEvent {
-        _event: Event;
         from: string;
         to: string;
         tokenId: BigNumber;
+        _event: Event;
     }
     interface TransferOwnershipEvent {
-        _event: Event;
         user: string;
+        _event: Event;
     }
     interface UnequipNFTEvent {
-        _event: Event;
         trollId: BigNumber;
         nft: string;
         nftId: BigNumber;
+        _event: Event;
     }
     interface UnstakeEvent {
-        _event: Event;
         who: string;
         tokenId: BigNumber;
         amount: BigNumber;
+        _event: Event;
     }
 }
