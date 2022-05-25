@@ -1,4 +1,4 @@
-define(@openswapdex/troll-nft-sdk, (require, exports)=>{
+define('@openswapdex/troll-nft-sdk', (require, exports)=>{
 var __create = Object.create;
 var __defProp = Object.defineProperty;
 var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
