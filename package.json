@@ -1,5 +1,5 @@
 {
-  "name": "@openswapdex/troll-nft-sdk",
+  "name": "@openswap/troll-nft-sdk",
   "version": "1.0.1",
   "description": "",
   "types": "types/index.d.ts",
@@ -24,7 +24,7 @@
   "homepage": "https://github.com/openswapdex/troll-nft-sdk#readme",  
   "devDependencies": {
     "@ijstech/eth-wallet": "git+https://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:x-oauth-basic@github.com/ijstech/eth-wallet.git",
-    "@openswapdex/troll-nft": "git+https://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:x-oauth-basic@github.com/openswapdex/troll-nft.git",
+    "@openswap/troll-nft": "git+https://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:x-oauth-basic@github.com/openswapdex/troll-nft.git",
     "@types/node": "^16.11.7",
     "esbuild": "^0.13.13",
     "solc": "^0.8.10",

@@ -1,7 +1,7 @@
 {
 "version": "0.8.4",
 "optimizerRuns": 999999,
-"sourceDir": "node_modules/@openswapdex/troll-nft/contracts",
+"sourceDir": "node_modules/@openswap/troll-nft/contracts",
 "outputDir": "src/contracts",
 "outputObjects": "bytecode"
 }
