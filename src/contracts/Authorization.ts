@@ -1,4 +1,4 @@
-import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
+import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-wallet";
 import Bin from "./Authorization.json";
 
 export class Authorization extends Contract{
@@ -7,7 +7,7 @@ export class Authorization extends Contract{
         this.assign()
     }
     deploy(): Promise<string>{
-        return this._deploy();
+        return this.__deploy();
     }
     parseAuthorizeEvent(receipt: TransactionReceipt): Authorization.AuthorizeEvent[]{
         return this.parseEvents(receipt, "Authorize").map(e=>this.decodeAuthorizeEvent(e));
@@ -49,71 +49,91 @@ export class Authorization extends Contract{
             _event: event
         };
     }
-    async deny_send(user:string): Promise<TransactionReceipt>{
-        let result = await this.send('deny',[user]);
-        return result;
-    }
-    async deny_call(user:string): Promise<void>{
-        let result = await this.call('deny',[user]);
-        return;
-    }
     deny: {
         (user:string): Promise<TransactionReceipt>;
         call: (user:string) => Promise<void>;
     }
-    async isPermitted(param1:string): Promise<boolean>{
-        let result = await this.call('isPermitted',[param1]);
-        return result;
+    isPermitted: {
+        (param1:string): Promise<boolean>;
     }
-    async newOwner(): Promise<string>{
-        let result = await this.call('newOwner');
-        return result;
+    newOwner: {
+        (): Promise<string>;
     }
-    async owner(): Promise<string>{
-        let result = await this.call('owner');
-        return result;
-    }
-    async permit_send(user:string): Promise<TransactionReceipt>{
-        let result = await this.send('permit',[user]);
-        return result;
-    }
-    async permit_call(user:string): Promise<void>{
-        let result = await this.call('permit',[user]);
-        return;
+    owner: {
+        (): Promise<string>;
     }
     permit: {
         (user:string): Promise<TransactionReceipt>;
         call: (user:string) => Promise<void>;
     }
-    async takeOwnership_send(): Promise<TransactionReceipt>{
-        let result = await this.send('takeOwnership');
-        return result;
-    }
-    async takeOwnership_call(): Promise<void>{
-        let result = await this.call('takeOwnership');
-        return;
-    }
     takeOwnership: {
         (): Promise<TransactionReceipt>;
         call: () => Promise<void>;
-    }
-    async transferOwnership_send(newOwner:string): Promise<TransactionReceipt>{
-        let result = await this.send('transferOwnership',[newOwner]);
-        return result;
-    }
-    async transferOwnership_call(newOwner:string): Promise<void>{
-        let result = await this.call('transferOwnership',[newOwner]);
-        return;
     }
     transferOwnership: {
         (newOwner:string): Promise<TransactionReceipt>;
         call: (newOwner:string) => Promise<void>;
     }
     private assign(){
-        this.deny = Object.assign(this.deny_send, {call:this.deny_call});
-        this.permit = Object.assign(this.permit_send, {call:this.permit_call});
-        this.takeOwnership = Object.assign(this.takeOwnership_send, {call:this.takeOwnership_call});
-        this.transferOwnership = Object.assign(this.transferOwnership_send, {call:this.transferOwnership_call});
+        let isPermitted_call = async (param1:string): Promise<boolean> => {
+            let result = await this.call('isPermitted',[param1]);
+            return result;
+        }
+        this.isPermitted = isPermitted_call
+        let newOwner_call = async (): Promise<string> => {
+            let result = await this.call('newOwner');
+            return result;
+        }
+        this.newOwner = newOwner_call
+        let owner_call = async (): Promise<string> => {
+            let result = await this.call('owner');
+            return result;
+        }
+        this.owner = owner_call
+        let deny_send = async (user:string): Promise<TransactionReceipt> => {
+            let result = await this.send('deny',[user]);
+            return result;
+        }
+        let deny_call = async (user:string): Promise<void> => {
+            let result = await this.call('deny',[user]);
+            return;
+        }
+        this.deny = Object.assign(deny_send, {
+            call:deny_call
+        });
+        let permit_send = async (user:string): Promise<TransactionReceipt> => {
+            let result = await this.send('permit',[user]);
+            return result;
+        }
+        let permit_call = async (user:string): Promise<void> => {
+            let result = await this.call('permit',[user]);
+            return;
+        }
+        this.permit = Object.assign(permit_send, {
+            call:permit_call
+        });
+        let takeOwnership_send = async (): Promise<TransactionReceipt> => {
+            let result = await this.send('takeOwnership');
+            return result;
+        }
+        let takeOwnership_call = async (): Promise<void> => {
+            let result = await this.call('takeOwnership');
+            return;
+        }
+        this.takeOwnership = Object.assign(takeOwnership_send, {
+            call:takeOwnership_call
+        });
+        let transferOwnership_send = async (newOwner:string): Promise<TransactionReceipt> => {
+            let result = await this.send('transferOwnership',[newOwner]);
+            return result;
+        }
+        let transferOwnership_call = async (newOwner:string): Promise<void> => {
+            let result = await this.call('transferOwnership',[newOwner]);
+            return;
+        }
+        this.transferOwnership = Object.assign(transferOwnership_send, {
+            call:transferOwnership_call
+        });
     }
 }
 export module Authorization{

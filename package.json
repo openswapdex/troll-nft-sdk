@@ -1,6 +1,6 @@
 {
   "name": "@openswap/troll-nft-sdk",
-  "version": "1.0.1",
+  "version": "0.1.2",
   "description": "",
   "types": "types/index.d.ts",
   "typings": "types/index.d.ts",
@@ -8,23 +8,15 @@
   "scripts": {
     "build": "npm run build:contracts && npm run build:lib",
     "build:contracts": "sol2ts solidity.config.json",
-    "build:lib": "tsc && node esbuild.bundle",
-    "test": "mocha --exit --require ts-node/register test/*.test.ts"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/openswapdex/troll-nft-sdk.git"
+    "build:lib": "tsc && node esbuild.bundle"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/openswapdex/troll-nft-sdk/issues"
-  },
-  "homepage": "https://github.com/openswapdex/troll-nft-sdk#readme",  
   "devDependencies": {
-    "@ijstech/eth-wallet": "git+https://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:x-oauth-basic@github.com/ijstech/eth-wallet.git",
-    "@openswap/troll-nft": "git+https://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:x-oauth-basic@github.com/openswapdex/troll-nft.git",
+    "@ijstech/eth-wallet": "https://github.com/ijstech/eth-wallet",
+    "@openzeppelin/contracts": "4.3.2",
+    "@chainlink/contracts": "0.2.2",
     "@types/node": "^16.11.7",
     "esbuild": "^0.13.13",
     "solc": "^0.8.10",

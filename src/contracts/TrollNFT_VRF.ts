@@ -1,13 +1,28 @@
-import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event} from "@ijstech/eth-wallet";
+import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-wallet";
 import Bin from "./TrollNFT_VRF.json";
 
+export interface IDeployParams {name:string;symbol:string;baseURI:string;cap:number|BigNumber;stakeToken:string;requireApproval:boolean;minimumStake:number|BigNumber;protocolFee:number|BigNumber;protocolFeeTo:string;vrfAddresses:string[];vrfParams:string[]}
+export interface IApproveParams {to:string;tokenId:number|BigNumber}
+export interface IGetAttributes1Params {tokenId:number|BigNumber;base:number|BigNumber;offset:number|BigNumber;digits:number|BigNumber}
+export interface IGetAttributes2Params {tokenId:number|BigNumber;base:number|BigNumber;digits:(number|BigNumber)[]}
+export interface IIsApprovedForAllParams {owner:string;operator:string}
+export interface IRawFulfillRandomnessParams {requestId:string;randomness:number|BigNumber}
+export interface ISafeTransferFromParams {from:string;to:string;tokenId:number|BigNumber}
+export interface ISafeTransferFrom_1Params {from:string;to:string;tokenId:number|BigNumber;data:string}
+export interface ISetApprovalForAllParams {operator:string;approved:boolean}
+export interface ISetApprovedStakerParams {staker:string;allow:boolean}
+export interface ISetCustomAttributeParams {tokenId:number|BigNumber;attribute:number|BigNumber}
+export interface ISetProtocolFeeParams {protocolFee:number|BigNumber;protocolFeeTo:string}
+export interface ISetVrfParamsParams {vrfKeyHash:string;vrfFee:number|BigNumber}
+export interface ITokenOfOwnerByIndexParams {owner:string;index:number|BigNumber}
+export interface ITransferFromParams {from:string;to:string;tokenId:number|BigNumber}
 export class TrollNFT_VRF extends Contract{
     constructor(wallet: IWallet, address?: string){
         super(wallet, address, Bin.abi, Bin.bytecode);
         this.assign()
     }
-    deploy(params:{name:string,symbol:string,baseURI:string,cap:number|BigNumber,stakeToken:string,requireApproval:boolean,minimumStake:number|BigNumber,protocolFee:number|BigNumber,protocolFeeTo:string,vrfAddresses:string[],vrfParams:string[]}): Promise<string>{
-        return this._deploy(params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo,params.vrfAddresses,Utils.stringToBytes32(params.vrfParams));
+    deploy(params: IDeployParams): Promise<string>{
+        return this.__deploy([params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo,params.vrfAddresses,Utils.stringToBytes32(params.vrfParams)]);
     }
     parseApprovalEvent(receipt: TransactionReceipt): TrollNFT_VRF.ApprovalEvent[]{
         return this.parseEvents(receipt, "Approval").map(e=>this.decodeApprovalEvent(e));
@@ -183,417 +198,599 @@ export class TrollNFT_VRF extends Contract{
             _event: event
         };
     }
-    async _attributes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.call('_attributes',[Utils.toString(param1)]);
-        return new BigNumber(result);
+    _attributes: {
+        (param1:number|BigNumber): Promise<BigNumber>;
     }
-    async _customAttributes(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.call('_customAttributes',[Utils.toString(param1)]);
-        return new BigNumber(result);
-    }
-    async approve_send(params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.send('approve',[params.to,Utils.toString(params.tokenId)]);
-        return result;
-    }
-    async approve_call(params:{to:string,tokenId:number|BigNumber}): Promise<void>{
-        let result = await this.call('approve',[params.to,Utils.toString(params.tokenId)]);
-        return;
+    _customAttributes: {
+        (param1:number|BigNumber): Promise<BigNumber>;
     }
     approve: {
-        (params:{to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>;
-        call: (params:{to:string,tokenId:number|BigNumber}) => Promise<void>;
+        (params: IApproveParams): Promise<TransactionReceipt>;
+        call: (params: IApproveParams) => Promise<void>;
     }
-    async approvedStaker(param1:string): Promise<boolean>{
-        let result = await this.call('approvedStaker',[param1]);
-        return result;
+    approvedStaker: {
+        (param1:string): Promise<boolean>;
     }
-    async balanceOf(owner:string): Promise<BigNumber>{
-        let result = await this.call('balanceOf',[owner]);
-        return new BigNumber(result);
+    balanceOf: {
+        (owner:string): Promise<BigNumber>;
     }
-    async baseURI(): Promise<string>{
-        let result = await this.call('baseURI');
-        return result;
-    }
-    async batchApprove_send(stakers:string[]): Promise<TransactionReceipt>{
-        let result = await this.send('batchApprove',[stakers]);
-        return result;
-    }
-    async batchApprove_call(stakers:string[]): Promise<void>{
-        let result = await this.call('batchApprove',[stakers]);
-        return;
+    baseURI: {
+        (): Promise<string>;
     }
     batchApprove: {
         (stakers:string[]): Promise<TransactionReceipt>;
         call: (stakers:string[]) => Promise<void>;
     }
-    async cap(): Promise<BigNumber>{
-        let result = await this.call('cap');
-        return new BigNumber(result);
+    cap: {
+        (): Promise<BigNumber>;
     }
-    async counter(): Promise<BigNumber>{
-        let result = await this.call('counter');
-        return new BigNumber(result);
+    counter: {
+        (): Promise<BigNumber>;
     }
-    async creationTime(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.call('creationTime',[Utils.toString(param1)]);
-        return new BigNumber(result);
-    }
-    async deny_send(user:string): Promise<TransactionReceipt>{
-        let result = await this.send('deny',[user]);
-        return result;
-    }
-    async deny_call(user:string): Promise<void>{
-        let result = await this.call('deny',[user]);
-        return;
+    creationTime: {
+        (param1:number|BigNumber): Promise<BigNumber>;
     }
     deny: {
         (user:string): Promise<TransactionReceipt>;
         call: (user:string) => Promise<void>;
     }
-    async getApproved(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.call('getApproved',[Utils.toString(tokenId)]);
-        return result;
+    getApproved: {
+        (tokenId:number|BigNumber): Promise<string>;
     }
-    async getAttributes1(params:{tokenId:number|BigNumber,base:number|BigNumber,offset:number|BigNumber,digits:number|BigNumber}): Promise<BigNumber>{
-        let result = await this.call('getAttributes1',[Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.offset),Utils.toString(params.digits)]);
-        return new BigNumber(result);
+    getAttributes1: {
+        (params: IGetAttributes1Params): Promise<BigNumber>;
     }
-    async getAttributes2(params:{tokenId:number|BigNumber,base:number|BigNumber,digits:(number|BigNumber)[]}): Promise<BigNumber[]>{
-        let result = await this.call('getAttributes2',[Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.digits)]);
-        return result.map(e=>new BigNumber(e));
+    getAttributes2: {
+        (params: IGetAttributes2Params): Promise<BigNumber[]>;
     }
-    async isApprovedForAll(params:{owner:string,operator:string}): Promise<boolean>{
-        let result = await this.call('isApprovedForAll',[params.owner,params.operator]);
-        return result;
+    isApprovedForAll: {
+        (params: IIsApprovedForAllParams): Promise<boolean>;
     }
-    async isPermitted(param1:string): Promise<boolean>{
-        let result = await this.call('isPermitted',[param1]);
-        return result;
+    isPermitted: {
+        (param1:string): Promise<boolean>;
     }
-    async minimumStake(): Promise<BigNumber>{
-        let result = await this.call('minimumStake');
-        return new BigNumber(result);
+    minimumStake: {
+        (): Promise<BigNumber>;
     }
-    async minted(param1:string): Promise<boolean>{
-        let result = await this.call('minted',[param1]);
-        return result;
+    minted: {
+        (param1:string): Promise<boolean>;
     }
-    async name(): Promise<string>{
-        let result = await this.call('name');
-        return result;
+    name: {
+        (): Promise<string>;
     }
-    async newOwner(): Promise<string>{
-        let result = await this.call('newOwner');
-        return result;
+    newOwner: {
+        (): Promise<string>;
     }
-    async owner(): Promise<string>{
-        let result = await this.call('owner');
-        return result;
+    owner: {
+        (): Promise<string>;
     }
-    async ownerOf(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.call('ownerOf',[Utils.toString(tokenId)]);
-        return result;
-    }
-    async permit_send(user:string): Promise<TransactionReceipt>{
-        let result = await this.send('permit',[user]);
-        return result;
-    }
-    async permit_call(user:string): Promise<void>{
-        let result = await this.call('permit',[user]);
-        return;
+    ownerOf: {
+        (tokenId:number|BigNumber): Promise<string>;
     }
     permit: {
         (user:string): Promise<TransactionReceipt>;
         call: (user:string) => Promise<void>;
     }
-    async protocolFee(): Promise<BigNumber>{
-        let result = await this.call('protocolFee');
-        return new BigNumber(result);
+    protocolFee: {
+        (): Promise<BigNumber>;
     }
-    async protocolFeeBalance(): Promise<BigNumber>{
-        let result = await this.call('protocolFeeBalance');
-        return new BigNumber(result);
+    protocolFeeBalance: {
+        (): Promise<BigNumber>;
     }
-    async protocolFeeTo(): Promise<string>{
-        let result = await this.call('protocolFeeTo');
-        return result;
-    }
-    async rawFulfillRandomness_send(params:{requestId:string,randomness:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.send('rawFulfillRandomness',[Utils.stringToBytes32(params.requestId),Utils.toString(params.randomness)]);
-        return result;
-    }
-    async rawFulfillRandomness_call(params:{requestId:string,randomness:number|BigNumber}): Promise<void>{
-        let result = await this.call('rawFulfillRandomness',[Utils.stringToBytes32(params.requestId),Utils.toString(params.randomness)]);
-        return;
+    protocolFeeTo: {
+        (): Promise<string>;
     }
     rawFulfillRandomness: {
-        (params:{requestId:string,randomness:number|BigNumber}): Promise<TransactionReceipt>;
-        call: (params:{requestId:string,randomness:number|BigNumber}) => Promise<void>;
+        (params: IRawFulfillRandomnessParams): Promise<TransactionReceipt>;
+        call: (params: IRawFulfillRandomnessParams) => Promise<void>;
     }
-    async requireApproval(): Promise<boolean>{
-        let result = await this.call('requireApproval');
-        return result;
-    }
-    async safeTransferFrom_send(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.send('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
-        return result;
-    }
-    async safeTransferFrom_call(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<void>{
-        let result = await this.call('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
-        return;
+    requireApproval: {
+        (): Promise<boolean>;
     }
     safeTransferFrom: {
-        (params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>;
-        call: (params:{from:string,to:string,tokenId:number|BigNumber}) => Promise<void>;
-    }
-    async safeTransferFrom_1_send(params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<TransactionReceipt>{
-        let result = await this.send('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId),params.data]);
-        return result;
-    }
-    async safeTransferFrom_1_call(params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<void>{
-        let result = await this.call('safeTransferFrom',[params.from,params.to,Utils.toString(params.tokenId),params.data]);
-        return;
+        (params: ISafeTransferFromParams): Promise<TransactionReceipt>;
+        call: (params: ISafeTransferFromParams) => Promise<void>;
     }
     safeTransferFrom_1: {
-        (params:{from:string,to:string,tokenId:number|BigNumber,data:string}): Promise<TransactionReceipt>;
-        call: (params:{from:string,to:string,tokenId:number|BigNumber,data:string}) => Promise<void>;
-    }
-    async setApprovalForAll_send(params:{operator:string,approved:boolean}): Promise<TransactionReceipt>{
-        let result = await this.send('setApprovalForAll',[params.operator,params.approved]);
-        return result;
-    }
-    async setApprovalForAll_call(params:{operator:string,approved:boolean}): Promise<void>{
-        let result = await this.call('setApprovalForAll',[params.operator,params.approved]);
-        return;
+        (params: ISafeTransferFrom_1Params): Promise<TransactionReceipt>;
+        call: (params: ISafeTransferFrom_1Params) => Promise<void>;
     }
     setApprovalForAll: {
-        (params:{operator:string,approved:boolean}): Promise<TransactionReceipt>;
-        call: (params:{operator:string,approved:boolean}) => Promise<void>;
-    }
-    async setApprovedStaker_send(params:{staker:string,allow:boolean}): Promise<TransactionReceipt>{
-        let result = await this.send('setApprovedStaker',[params.staker,params.allow]);
-        return result;
-    }
-    async setApprovedStaker_call(params:{staker:string,allow:boolean}): Promise<void>{
-        let result = await this.call('setApprovedStaker',[params.staker,params.allow]);
-        return;
+        (params: ISetApprovalForAllParams): Promise<TransactionReceipt>;
+        call: (params: ISetApprovalForAllParams) => Promise<void>;
     }
     setApprovedStaker: {
-        (params:{staker:string,allow:boolean}): Promise<TransactionReceipt>;
-        call: (params:{staker:string,allow:boolean}) => Promise<void>;
-    }
-    async setBaseURI_send(baseURI:string): Promise<TransactionReceipt>{
-        let result = await this.send('setBaseURI',[baseURI]);
-        return result;
-    }
-    async setBaseURI_call(baseURI:string): Promise<void>{
-        let result = await this.call('setBaseURI',[baseURI]);
-        return;
+        (params: ISetApprovedStakerParams): Promise<TransactionReceipt>;
+        call: (params: ISetApprovedStakerParams) => Promise<void>;
     }
     setBaseURI: {
         (baseURI:string): Promise<TransactionReceipt>;
         call: (baseURI:string) => Promise<void>;
     }
-    async setCap_send(cap:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.send('setCap',[Utils.toString(cap)]);
-        return result;
-    }
-    async setCap_call(cap:number|BigNumber): Promise<void>{
-        let result = await this.call('setCap',[Utils.toString(cap)]);
-        return;
-    }
     setCap: {
         (cap:number|BigNumber): Promise<TransactionReceipt>;
         call: (cap:number|BigNumber) => Promise<void>;
     }
-    async setCustomAttribute_send(params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.send('setCustomAttribute',[Utils.toString(params.tokenId),Utils.toString(params.attribute)]);
-        return result;
-    }
-    async setCustomAttribute_call(params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<void>{
-        let result = await this.call('setCustomAttribute',[Utils.toString(params.tokenId),Utils.toString(params.attribute)]);
-        return;
-    }
     setCustomAttribute: {
-        (params:{tokenId:number|BigNumber,attribute:number|BigNumber}): Promise<TransactionReceipt>;
-        call: (params:{tokenId:number|BigNumber,attribute:number|BigNumber}) => Promise<void>;
-    }
-    async setMinimumStake_send(minimumStake:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.send('setMinimumStake',[Utils.toString(minimumStake)]);
-        return result;
-    }
-    async setMinimumStake_call(minimumStake:number|BigNumber): Promise<void>{
-        let result = await this.call('setMinimumStake',[Utils.toString(minimumStake)]);
-        return;
+        (params: ISetCustomAttributeParams): Promise<TransactionReceipt>;
+        call: (params: ISetCustomAttributeParams) => Promise<void>;
     }
     setMinimumStake: {
         (minimumStake:number|BigNumber): Promise<TransactionReceipt>;
         call: (minimumStake:number|BigNumber) => Promise<void>;
     }
-    async setProtocolFee_send(params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<TransactionReceipt>{
-        let result = await this.send('setProtocolFee',[Utils.toString(params.protocolFee),params.protocolFeeTo]);
-        return result;
-    }
-    async setProtocolFee_call(params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<void>{
-        let result = await this.call('setProtocolFee',[Utils.toString(params.protocolFee),params.protocolFeeTo]);
-        return;
-    }
     setProtocolFee: {
-        (params:{protocolFee:number|BigNumber,protocolFeeTo:string}): Promise<TransactionReceipt>;
-        call: (params:{protocolFee:number|BigNumber,protocolFeeTo:string}) => Promise<void>;
-    }
-    async setVrfParams_send(params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.send('setVrfParams',[Utils.stringToBytes32(params.vrfKeyHash),Utils.toString(params.vrfFee)]);
-        return result;
-    }
-    async setVrfParams_call(params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<void>{
-        let result = await this.call('setVrfParams',[Utils.stringToBytes32(params.vrfKeyHash),Utils.toString(params.vrfFee)]);
-        return;
+        (params: ISetProtocolFeeParams): Promise<TransactionReceipt>;
+        call: (params: ISetProtocolFeeParams) => Promise<void>;
     }
     setVrfParams: {
-        (params:{vrfKeyHash:string,vrfFee:number|BigNumber}): Promise<TransactionReceipt>;
-        call: (params:{vrfKeyHash:string,vrfFee:number|BigNumber}) => Promise<void>;
-    }
-    async stake_send(amount:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.send('stake',[Utils.toString(amount)]);
-        return result;
-    }
-    async stake_call(amount:number|BigNumber): Promise<BigNumber>{
-        let result = await this.call('stake',[Utils.toString(amount)]);
-        return new BigNumber(result);
+        (params: ISetVrfParamsParams): Promise<TransactionReceipt>;
+        call: (params: ISetVrfParamsParams) => Promise<void>;
     }
     stake: {
         (amount:number|BigNumber): Promise<TransactionReceipt>;
         call: (amount:number|BigNumber) => Promise<BigNumber>;
     }
-    async stakeToken(): Promise<string>{
-        let result = await this.call('stakeToken');
-        return result;
+    stakeToken: {
+        (): Promise<string>;
     }
-    async stakingBalance(param1:number|BigNumber): Promise<BigNumber>{
-        let result = await this.call('stakingBalance',[Utils.toString(param1)]);
-        return new BigNumber(result);
+    stakingBalance: {
+        (param1:number|BigNumber): Promise<BigNumber>;
     }
-    async supportsInterface(interfaceId:string): Promise<boolean>{
-        let result = await this.call('supportsInterface',[interfaceId]);
-        return result;
+    supportsInterface: {
+        (interfaceId:string): Promise<boolean>;
     }
-    async symbol(): Promise<string>{
-        let result = await this.call('symbol');
-        return result;
-    }
-    async takeOwnership_send(): Promise<TransactionReceipt>{
-        let result = await this.send('takeOwnership');
-        return result;
-    }
-    async takeOwnership_call(): Promise<void>{
-        let result = await this.call('takeOwnership');
-        return;
+    symbol: {
+        (): Promise<string>;
     }
     takeOwnership: {
         (): Promise<TransactionReceipt>;
         call: () => Promise<void>;
     }
-    async tokenByIndex(index:number|BigNumber): Promise<BigNumber>{
-        let result = await this.call('tokenByIndex',[Utils.toString(index)]);
-        return new BigNumber(result);
+    tokenByIndex: {
+        (index:number|BigNumber): Promise<BigNumber>;
     }
-    async tokenOfOwnerByIndex(params:{owner:string,index:number|BigNumber}): Promise<BigNumber>{
-        let result = await this.call('tokenOfOwnerByIndex',[params.owner,Utils.toString(params.index)]);
-        return new BigNumber(result);
+    tokenOfOwnerByIndex: {
+        (params: ITokenOfOwnerByIndexParams): Promise<BigNumber>;
     }
-    async tokenURI(tokenId:number|BigNumber): Promise<string>{
-        let result = await this.call('tokenURI',[Utils.toString(tokenId)]);
-        return result;
+    tokenURI: {
+        (tokenId:number|BigNumber): Promise<string>;
     }
-    async totalSupply(): Promise<BigNumber>{
-        let result = await this.call('totalSupply');
-        return new BigNumber(result);
-    }
-    async transferFrom_send(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>{
-        let result = await this.send('transferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
-        return result;
-    }
-    async transferFrom_call(params:{from:string,to:string,tokenId:number|BigNumber}): Promise<void>{
-        let result = await this.call('transferFrom',[params.from,params.to,Utils.toString(params.tokenId)]);
-        return;
+    totalSupply: {
+        (): Promise<BigNumber>;
     }
     transferFrom: {
-        (params:{from:string,to:string,tokenId:number|BigNumber}): Promise<TransactionReceipt>;
-        call: (params:{from:string,to:string,tokenId:number|BigNumber}) => Promise<void>;
-    }
-    async transferOwnership_send(newOwner:string): Promise<TransactionReceipt>{
-        let result = await this.send('transferOwnership',[newOwner]);
-        return result;
-    }
-    async transferOwnership_call(newOwner:string): Promise<void>{
-        let result = await this.call('transferOwnership',[newOwner]);
-        return;
+        (params: ITransferFromParams): Promise<TransactionReceipt>;
+        call: (params: ITransferFromParams) => Promise<void>;
     }
     transferOwnership: {
         (newOwner:string): Promise<TransactionReceipt>;
         call: (newOwner:string) => Promise<void>;
     }
-    async transferProtocolFee_send(): Promise<TransactionReceipt>{
-        let result = await this.send('transferProtocolFee');
-        return result;
-    }
-    async transferProtocolFee_call(): Promise<void>{
-        let result = await this.call('transferProtocolFee');
-        return;
-    }
     transferProtocolFee: {
         (): Promise<TransactionReceipt>;
         call: () => Promise<void>;
     }
-    async unstake_send(tokenId:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.send('unstake',[Utils.toString(tokenId)]);
-        return result;
-    }
-    async unstake_call(tokenId:number|BigNumber): Promise<void>{
-        let result = await this.call('unstake',[Utils.toString(tokenId)]);
-        return;
-    }
     unstake: {
         (tokenId:number|BigNumber): Promise<TransactionReceipt>;
         call: (tokenId:number|BigNumber) => Promise<void>;
-    }
-    async withdrawLink_send(amount:number|BigNumber): Promise<TransactionReceipt>{
-        let result = await this.send('withdrawLink',[Utils.toString(amount)]);
-        return result;
-    }
-    async withdrawLink_call(amount:number|BigNumber): Promise<void>{
-        let result = await this.call('withdrawLink',[Utils.toString(amount)]);
-        return;
     }
     withdrawLink: {
         (amount:number|BigNumber): Promise<TransactionReceipt>;
         call: (amount:number|BigNumber) => Promise<void>;
     }
     private assign(){
-        this.approve = Object.assign(this.approve_send, {call:this.approve_call});
-        this.batchApprove = Object.assign(this.batchApprove_send, {call:this.batchApprove_call});
-        this.deny = Object.assign(this.deny_send, {call:this.deny_call});
-        this.permit = Object.assign(this.permit_send, {call:this.permit_call});
-        this.rawFulfillRandomness = Object.assign(this.rawFulfillRandomness_send, {call:this.rawFulfillRandomness_call});
-        this.safeTransferFrom = Object.assign(this.safeTransferFrom_send, {call:this.safeTransferFrom_call});
-        this.safeTransferFrom_1 = Object.assign(this.safeTransferFrom_1_send, {call:this.safeTransferFrom_1_call});
-        this.setApprovalForAll = Object.assign(this.setApprovalForAll_send, {call:this.setApprovalForAll_call});
-        this.setApprovedStaker = Object.assign(this.setApprovedStaker_send, {call:this.setApprovedStaker_call});
-        this.setBaseURI = Object.assign(this.setBaseURI_send, {call:this.setBaseURI_call});
-        this.setCap = Object.assign(this.setCap_send, {call:this.setCap_call});
-        this.setCustomAttribute = Object.assign(this.setCustomAttribute_send, {call:this.setCustomAttribute_call});
-        this.setMinimumStake = Object.assign(this.setMinimumStake_send, {call:this.setMinimumStake_call});
-        this.setProtocolFee = Object.assign(this.setProtocolFee_send, {call:this.setProtocolFee_call});
-        this.setVrfParams = Object.assign(this.setVrfParams_send, {call:this.setVrfParams_call});
-        this.stake = Object.assign(this.stake_send, {call:this.stake_call});
-        this.takeOwnership = Object.assign(this.takeOwnership_send, {call:this.takeOwnership_call});
-        this.transferFrom = Object.assign(this.transferFrom_send, {call:this.transferFrom_call});
-        this.transferOwnership = Object.assign(this.transferOwnership_send, {call:this.transferOwnership_call});
-        this.transferProtocolFee = Object.assign(this.transferProtocolFee_send, {call:this.transferProtocolFee_call});
-        this.unstake = Object.assign(this.unstake_send, {call:this.unstake_call});
-        this.withdrawLink = Object.assign(this.withdrawLink_send, {call:this.withdrawLink_call});
+        let _attributes_call = async (param1:number|BigNumber): Promise<BigNumber> => {
+            let result = await this.call('_attributes',[Utils.toString(param1)]);
+            return new BigNumber(result);
+        }
+        this._attributes = _attributes_call
+        let _customAttributes_call = async (param1:number|BigNumber): Promise<BigNumber> => {
+            let result = await this.call('_customAttributes',[Utils.toString(param1)]);
+            return new BigNumber(result);
+        }
+        this._customAttributes = _customAttributes_call
+        let approvedStaker_call = async (param1:string): Promise<boolean> => {
+            let result = await this.call('approvedStaker',[param1]);
+            return result;
+        }
+        this.approvedStaker = approvedStaker_call
+        let balanceOf_call = async (owner:string): Promise<BigNumber> => {
+            let result = await this.call('balanceOf',[owner]);
+            return new BigNumber(result);
+        }
+        this.balanceOf = balanceOf_call
+        let baseURI_call = async (): Promise<string> => {
+            let result = await this.call('baseURI');
+            return result;
+        }
+        this.baseURI = baseURI_call
+        let cap_call = async (): Promise<BigNumber> => {
+            let result = await this.call('cap');
+            return new BigNumber(result);
+        }
+        this.cap = cap_call
+        let counter_call = async (): Promise<BigNumber> => {
+            let result = await this.call('counter');
+            return new BigNumber(result);
+        }
+        this.counter = counter_call
+        let creationTime_call = async (param1:number|BigNumber): Promise<BigNumber> => {
+            let result = await this.call('creationTime',[Utils.toString(param1)]);
+            return new BigNumber(result);
+        }
+        this.creationTime = creationTime_call
+        let getApproved_call = async (tokenId:number|BigNumber): Promise<string> => {
+            let result = await this.call('getApproved',[Utils.toString(tokenId)]);
+            return result;
+        }
+        this.getApproved = getApproved_call
+        let getAttributes1Params = (params: IGetAttributes1Params) => [Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.offset),Utils.toString(params.digits)];
+        let getAttributes1_call = async (params: IGetAttributes1Params): Promise<BigNumber> => {
+            let result = await this.call('getAttributes1',getAttributes1Params(params));
+            return new BigNumber(result);
+        }
+        this.getAttributes1 = getAttributes1_call
+        let getAttributes2Params = (params: IGetAttributes2Params) => [Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.digits)];
+        let getAttributes2_call = async (params: IGetAttributes2Params): Promise<BigNumber[]> => {
+            let result = await this.call('getAttributes2',getAttributes2Params(params));
+            return result.map(e=>new BigNumber(e));
+        }
+        this.getAttributes2 = getAttributes2_call
+        let isApprovedForAllParams = (params: IIsApprovedForAllParams) => [params.owner,params.operator];
+        let isApprovedForAll_call = async (params: IIsApprovedForAllParams): Promise<boolean> => {
+            let result = await this.call('isApprovedForAll',isApprovedForAllParams(params));
+            return result;
+        }
+        this.isApprovedForAll = isApprovedForAll_call
+        let isPermitted_call = async (param1:string): Promise<boolean> => {
+            let result = await this.call('isPermitted',[param1]);
+            return result;
+        }
+        this.isPermitted = isPermitted_call
+        let minimumStake_call = async (): Promise<BigNumber> => {
+            let result = await this.call('minimumStake');
+            return new BigNumber(result);
+        }
+        this.minimumStake = minimumStake_call
+        let minted_call = async (param1:string): Promise<boolean> => {
+            let result = await this.call('minted',[param1]);
+            return result;
+        }
+        this.minted = minted_call
+        let name_call = async (): Promise<string> => {
+            let result = await this.call('name');
+            return result;
+        }
+        this.name = name_call
+        let newOwner_call = async (): Promise<string> => {
+            let result = await this.call('newOwner');
+            return result;
+        }
+        this.newOwner = newOwner_call
+        let owner_call = async (): Promise<string> => {
+            let result = await this.call('owner');
+            return result;
+        }
+        this.owner = owner_call
+        let ownerOf_call = async (tokenId:number|BigNumber): Promise<string> => {
+            let result = await this.call('ownerOf',[Utils.toString(tokenId)]);
+            return result;
+        }
+        this.ownerOf = ownerOf_call
+        let protocolFee_call = async (): Promise<BigNumber> => {
+            let result = await this.call('protocolFee');
+            return new BigNumber(result);
+        }
+        this.protocolFee = protocolFee_call
+        let protocolFeeBalance_call = async (): Promise<BigNumber> => {
+            let result = await this.call('protocolFeeBalance');
+            return new BigNumber(result);
+        }
+        this.protocolFeeBalance = protocolFeeBalance_call
+        let protocolFeeTo_call = async (): Promise<string> => {
+            let result = await this.call('protocolFeeTo');
+            return result;
+        }
+        this.protocolFeeTo = protocolFeeTo_call
+        let requireApproval_call = async (): Promise<boolean> => {
+            let result = await this.call('requireApproval');
+            return result;
+        }
+        this.requireApproval = requireApproval_call
+        let stakeToken_call = async (): Promise<string> => {
+            let result = await this.call('stakeToken');
+            return result;
+        }
+        this.stakeToken = stakeToken_call
+        let stakingBalance_call = async (param1:number|BigNumber): Promise<BigNumber> => {
+            let result = await this.call('stakingBalance',[Utils.toString(param1)]);
+            return new BigNumber(result);
+        }
+        this.stakingBalance = stakingBalance_call
+        let supportsInterface_call = async (interfaceId:string): Promise<boolean> => {
+            let result = await this.call('supportsInterface',[interfaceId]);
+            return result;
+        }
+        this.supportsInterface = supportsInterface_call
+        let symbol_call = async (): Promise<string> => {
+            let result = await this.call('symbol');
+            return result;
+        }
+        this.symbol = symbol_call
+        let tokenByIndex_call = async (index:number|BigNumber): Promise<BigNumber> => {
+            let result = await this.call('tokenByIndex',[Utils.toString(index)]);
+            return new BigNumber(result);
+        }
+        this.tokenByIndex = tokenByIndex_call
+        let tokenOfOwnerByIndexParams = (params: ITokenOfOwnerByIndexParams) => [params.owner,Utils.toString(params.index)];
+        let tokenOfOwnerByIndex_call = async (params: ITokenOfOwnerByIndexParams): Promise<BigNumber> => {
+            let result = await this.call('tokenOfOwnerByIndex',tokenOfOwnerByIndexParams(params));
+            return new BigNumber(result);
+        }
+        this.tokenOfOwnerByIndex = tokenOfOwnerByIndex_call
+        let tokenURI_call = async (tokenId:number|BigNumber): Promise<string> => {
+            let result = await this.call('tokenURI',[Utils.toString(tokenId)]);
+            return result;
+        }
+        this.tokenURI = tokenURI_call
+        let totalSupply_call = async (): Promise<BigNumber> => {
+            let result = await this.call('totalSupply');
+            return new BigNumber(result);
+        }
+        this.totalSupply = totalSupply_call
+        let approveParams = (params: IApproveParams) => [params.to,Utils.toString(params.tokenId)];
+        let approve_send = async (params: IApproveParams): Promise<TransactionReceipt> => {
+            let result = await this.send('approve',approveParams(params));
+            return result;
+        }
+        let approve_call = async (params: IApproveParams): Promise<void> => {
+            let result = await this.call('approve',approveParams(params));
+            return;
+        }
+        this.approve = Object.assign(approve_send, {
+            call:approve_call
+        });
+        let batchApprove_send = async (stakers:string[]): Promise<TransactionReceipt> => {
+            let result = await this.send('batchApprove',[stakers]);
+            return result;
+        }
+        let batchApprove_call = async (stakers:string[]): Promise<void> => {
+            let result = await this.call('batchApprove',[stakers]);
+            return;
+        }
+        this.batchApprove = Object.assign(batchApprove_send, {
+            call:batchApprove_call
+        });
+        let deny_send = async (user:string): Promise<TransactionReceipt> => {
+            let result = await this.send('deny',[user]);
+            return result;
+        }
+        let deny_call = async (user:string): Promise<void> => {
+            let result = await this.call('deny',[user]);
+            return;
+        }
+        this.deny = Object.assign(deny_send, {
+            call:deny_call
+        });
+        let permit_send = async (user:string): Promise<TransactionReceipt> => {
+            let result = await this.send('permit',[user]);
+            return result;
+        }
+        let permit_call = async (user:string): Promise<void> => {
+            let result = await this.call('permit',[user]);
+            return;
+        }
+        this.permit = Object.assign(permit_send, {
+            call:permit_call
+        });
+        let rawFulfillRandomnessParams = (params: IRawFulfillRandomnessParams) => [Utils.stringToBytes32(params.requestId),Utils.toString(params.randomness)];
+        let rawFulfillRandomness_send = async (params: IRawFulfillRandomnessParams): Promise<TransactionReceipt> => {
+            let result = await this.send('rawFulfillRandomness',rawFulfillRandomnessParams(params));
+            return result;
+        }
+        let rawFulfillRandomness_call = async (params: IRawFulfillRandomnessParams): Promise<void> => {
+            let result = await this.call('rawFulfillRandomness',rawFulfillRandomnessParams(params));
+            return;
+        }
+        this.rawFulfillRandomness = Object.assign(rawFulfillRandomness_send, {
+            call:rawFulfillRandomness_call
+        });
+        let safeTransferFromParams = (params: ISafeTransferFromParams) => [params.from,params.to,Utils.toString(params.tokenId)];
+        let safeTransferFrom_send = async (params: ISafeTransferFromParams): Promise<TransactionReceipt> => {
+            let result = await this.send('safeTransferFrom',safeTransferFromParams(params));
+            return result;
+        }
+        let safeTransferFrom_call = async (params: ISafeTransferFromParams): Promise<void> => {
+            let result = await this.call('safeTransferFrom',safeTransferFromParams(params));
+            return;
+        }
+        this.safeTransferFrom = Object.assign(safeTransferFrom_send, {
+            call:safeTransferFrom_call
+        });
+        let safeTransferFrom_1Params = (params: ISafeTransferFrom_1Params) => [params.from,params.to,Utils.toString(params.tokenId),Utils.stringToBytes(params.data)];
+        let safeTransferFrom_1_send = async (params: ISafeTransferFromParams): Promise<TransactionReceipt> => {
+            let result = await this.send('safeTransferFrom',safeTransferFromParams(params));
+            return result;
+        }
+        let safeTransferFrom_1_call = async (params: ISafeTransferFromParams): Promise<void> => {
+            let result = await this.call('safeTransferFrom',safeTransferFromParams(params));
+            return;
+        }
+        this.safeTransferFrom_1 = Object.assign(safeTransferFrom_1_send, {
+            call:safeTransferFrom_1_call
+        });
+        let setApprovalForAllParams = (params: ISetApprovalForAllParams) => [params.operator,params.approved];
+        let setApprovalForAll_send = async (params: ISetApprovalForAllParams): Promise<TransactionReceipt> => {
+            let result = await this.send('setApprovalForAll',setApprovalForAllParams(params));
+            return result;
+        }
+        let setApprovalForAll_call = async (params: ISetApprovalForAllParams): Promise<void> => {
+            let result = await this.call('setApprovalForAll',setApprovalForAllParams(params));
+            return;
+        }
+        this.setApprovalForAll = Object.assign(setApprovalForAll_send, {
+            call:setApprovalForAll_call
+        });
+        let setApprovedStakerParams = (params: ISetApprovedStakerParams) => [params.staker,params.allow];
+        let setApprovedStaker_send = async (params: ISetApprovedStakerParams): Promise<TransactionReceipt> => {
+            let result = await this.send('setApprovedStaker',setApprovedStakerParams(params));
+            return result;
+        }
+        let setApprovedStaker_call = async (params: ISetApprovedStakerParams): Promise<void> => {
+            let result = await this.call('setApprovedStaker',setApprovedStakerParams(params));
+            return;
+        }
+        this.setApprovedStaker = Object.assign(setApprovedStaker_send, {
+            call:setApprovedStaker_call
+        });
+        let setBaseURI_send = async (baseURI:string): Promise<TransactionReceipt> => {
+            let result = await this.send('setBaseURI',[baseURI]);
+            return result;
+        }
+        let setBaseURI_call = async (baseURI:string): Promise<void> => {
+            let result = await this.call('setBaseURI',[baseURI]);
+            return;
+        }
+        this.setBaseURI = Object.assign(setBaseURI_send, {
+            call:setBaseURI_call
+        });
+        let setCap_send = async (cap:number|BigNumber): Promise<TransactionReceipt> => {
+            let result = await this.send('setCap',[Utils.toString(cap)]);
+            return result;
+        }
+        let setCap_call = async (cap:number|BigNumber): Promise<void> => {
+            let result = await this.call('setCap',[Utils.toString(cap)]);
+            return;
+        }
+        this.setCap = Object.assign(setCap_send, {
+            call:setCap_call
+        });
+        let setCustomAttributeParams = (params: ISetCustomAttributeParams) => [Utils.toString(params.tokenId),Utils.toString(params.attribute)];
+        let setCustomAttribute_send = async (params: ISetCustomAttributeParams): Promise<TransactionReceipt> => {
+            let result = await this.send('setCustomAttribute',setCustomAttributeParams(params));
+            return result;
+        }
+        let setCustomAttribute_call = async (params: ISetCustomAttributeParams): Promise<void> => {
+            let result = await this.call('setCustomAttribute',setCustomAttributeParams(params));
+            return;
+        }
+        this.setCustomAttribute = Object.assign(setCustomAttribute_send, {
+            call:setCustomAttribute_call
+        });
+        let setMinimumStake_send = async (minimumStake:number|BigNumber): Promise<TransactionReceipt> => {
+            let result = await this.send('setMinimumStake',[Utils.toString(minimumStake)]);
+            return result;
+        }
+        let setMinimumStake_call = async (minimumStake:number|BigNumber): Promise<void> => {
+            let result = await this.call('setMinimumStake',[Utils.toString(minimumStake)]);
+            return;
+        }
+        this.setMinimumStake = Object.assign(setMinimumStake_send, {
+            call:setMinimumStake_call
+        });
+        let setProtocolFeeParams = (params: ISetProtocolFeeParams) => [Utils.toString(params.protocolFee),params.protocolFeeTo];
+        let setProtocolFee_send = async (params: ISetProtocolFeeParams): Promise<TransactionReceipt> => {
+            let result = await this.send('setProtocolFee',setProtocolFeeParams(params));
+            return result;
+        }
+        let setProtocolFee_call = async (params: ISetProtocolFeeParams): Promise<void> => {
+            let result = await this.call('setProtocolFee',setProtocolFeeParams(params));
+            return;
+        }
+        this.setProtocolFee = Object.assign(setProtocolFee_send, {
+            call:setProtocolFee_call
+        });
+        let setVrfParamsParams = (params: ISetVrfParamsParams) => [Utils.stringToBytes32(params.vrfKeyHash),Utils.toString(params.vrfFee)];
+        let setVrfParams_send = async (params: ISetVrfParamsParams): Promise<TransactionReceipt> => {
+            let result = await this.send('setVrfParams',setVrfParamsParams(params));
+            return result;
+        }
+        let setVrfParams_call = async (params: ISetVrfParamsParams): Promise<void> => {
+            let result = await this.call('setVrfParams',setVrfParamsParams(params));
+            return;
+        }
+        this.setVrfParams = Object.assign(setVrfParams_send, {
+            call:setVrfParams_call
+        });
+        let stake_send = async (amount:number|BigNumber): Promise<TransactionReceipt> => {
+            let result = await this.send('stake',[Utils.toString(amount)]);
+            return result;
+        }
+        let stake_call = async (amount:number|BigNumber): Promise<BigNumber> => {
+            let result = await this.call('stake',[Utils.toString(amount)]);
+            return new BigNumber(result);
+        }
+        this.stake = Object.assign(stake_send, {
+            call:stake_call
+        });
+        let takeOwnership_send = async (): Promise<TransactionReceipt> => {
+            let result = await this.send('takeOwnership');
+            return result;
+        }
+        let takeOwnership_call = async (): Promise<void> => {
+            let result = await this.call('takeOwnership');
+            return;
+        }
+        this.takeOwnership = Object.assign(takeOwnership_send, {
+            call:takeOwnership_call
+        });
+        let transferFromParams = (params: ITransferFromParams) => [params.from,params.to,Utils.toString(params.tokenId)];
+        let transferFrom_send = async (params: ITransferFromParams): Promise<TransactionReceipt> => {
+            let result = await this.send('transferFrom',transferFromParams(params));
+            return result;
+        }
+        let transferFrom_call = async (params: ITransferFromParams): Promise<void> => {
+            let result = await this.call('transferFrom',transferFromParams(params));
+            return;
+        }
+        this.transferFrom = Object.assign(transferFrom_send, {
+            call:transferFrom_call
+        });
+        let transferOwnership_send = async (newOwner:string): Promise<TransactionReceipt> => {
+            let result = await this.send('transferOwnership',[newOwner]);
+            return result;
+        }
+        let transferOwnership_call = async (newOwner:string): Promise<void> => {
+            let result = await this.call('transferOwnership',[newOwner]);
+            return;
+        }
+        this.transferOwnership = Object.assign(transferOwnership_send, {
+            call:transferOwnership_call
+        });
+        let transferProtocolFee_send = async (): Promise<TransactionReceipt> => {
+            let result = await this.send('transferProtocolFee');
+            return result;
+        }
+        let transferProtocolFee_call = async (): Promise<void> => {
+            let result = await this.call('transferProtocolFee');
+            return;
+        }
+        this.transferProtocolFee = Object.assign(transferProtocolFee_send, {
+            call:transferProtocolFee_call
+        });
+        let unstake_send = async (tokenId:number|BigNumber): Promise<TransactionReceipt> => {
+            let result = await this.send('unstake',[Utils.toString(tokenId)]);
+            return result;
+        }
+        let unstake_call = async (tokenId:number|BigNumber): Promise<void> => {
+            let result = await this.call('unstake',[Utils.toString(tokenId)]);
+            return;
+        }
+        this.unstake = Object.assign(unstake_send, {
+            call:unstake_call
+        });
+        let withdrawLink_send = async (amount:number|BigNumber): Promise<TransactionReceipt> => {
+            let result = await this.send('withdrawLink',[Utils.toString(amount)]);
+            return result;
+        }
+        let withdrawLink_call = async (amount:number|BigNumber): Promise<void> => {
+            let result = await this.call('withdrawLink',[Utils.toString(amount)]);
+            return;
+        }
+        this.withdrawLink = Object.assign(withdrawLink_send, {
+            call:withdrawLink_call
+        });
     }
 }
 export module TrollNFT_VRF{

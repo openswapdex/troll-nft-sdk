@@ -1,17 +1,73 @@
 import { IWallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-wallet";
+export interface IDeployParams {
+    name: string;
+    symbol: string;
+    baseURI: string;
+    cap: number | BigNumber;
+    stakeToken: string;
+    requireApproval: boolean;
+    minimumStake: number | BigNumber;
+    protocolFee: number | BigNumber;
+    protocolFeeTo: string;
+}
+export interface IApproveParams {
+    to: string;
+    tokenId: number | BigNumber;
+}
+export interface IGetAttributes1Params {
+    tokenId: number | BigNumber;
+    base: number | BigNumber;
+    offset: number | BigNumber;
+    digits: number | BigNumber;
+}
+export interface IGetAttributes2Params {
+    tokenId: number | BigNumber;
+    base: number | BigNumber;
+    digits: (number | BigNumber)[];
+}
+export interface IIsApprovedForAllParams {
+    owner: string;
+    operator: string;
+}
+export interface ISafeTransferFromParams {
+    from: string;
+    to: string;
+    tokenId: number | BigNumber;
+}
+export interface ISafeTransferFrom_1Params {
+    from: string;
+    to: string;
+    tokenId: number | BigNumber;
+    data: string;
+}
+export interface ISetApprovalForAllParams {
+    operator: string;
+    approved: boolean;
+}
+export interface ISetApprovedStakerParams {
+    staker: string;
+    allow: boolean;
+}
+export interface ISetCustomAttributeParams {
+    tokenId: number | BigNumber;
+    attribute: number | BigNumber;
+}
+export interface ISetProtocolFeeParams {
+    protocolFee: number | BigNumber;
+    protocolFeeTo: string;
+}
+export interface ITokenOfOwnerByIndexParams {
+    owner: string;
+    index: number | BigNumber;
+}
+export interface ITransferFromParams {
+    from: string;
+    to: string;
+    tokenId: number | BigNumber;
+}
 export declare class TrollNFT extends Contract {
     constructor(wallet: IWallet, address?: string);
-    deploy(params: {
-        name: string;
-        symbol: string;
-        baseURI: string;
-        cap: number | BigNumber;
-        stakeToken: string;
-        requireApproval: boolean;
-        minimumStake: number | BigNumber;
-        protocolFee: number | BigNumber;
-        protocolFeeTo: string;
-    }): Promise<string>;
+    deploy(params: IDeployParams): Promise<string>;
     parseApprovalEvent(receipt: TransactionReceipt): TrollNFT.ApprovalEvent[];
     decodeApprovalEvent(event: Event): TrollNFT.ApprovalEvent;
     parseApprovalForAllEvent(receipt: TransactionReceipt): TrollNFT.ApprovalForAllEvent[];
@@ -44,274 +100,171 @@ export declare class TrollNFT extends Contract {
     decodeTransferOwnershipEvent(event: Event): TrollNFT.TransferOwnershipEvent;
     parseUnstakeEvent(receipt: TransactionReceipt): TrollNFT.UnstakeEvent[];
     decodeUnstakeEvent(event: Event): TrollNFT.UnstakeEvent;
-    _attributes(param1: number | BigNumber): Promise<BigNumber>;
-    _customAttributes(param1: number | BigNumber): Promise<BigNumber>;
-    approve_send(params: {
-        to: string;
-        tokenId: number | BigNumber;
-    }): Promise<TransactionReceipt>;
-    approve_call(params: {
-        to: string;
-        tokenId: number | BigNumber;
-    }): Promise<void>;
-    approve: {
-        (params: {
-            to: string;
-            tokenId: number | BigNumber;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            to: string;
-            tokenId: number | BigNumber;
-        }) => Promise<void>;
+    _attributes: {
+        (param1: number | BigNumber): Promise<BigNumber>;
     };
-    approvedStaker(param1: string): Promise<boolean>;
-    balanceOf(owner: string): Promise<BigNumber>;
-    baseURI(): Promise<string>;
-    batchApprove_send(stakers: string[]): Promise<TransactionReceipt>;
-    batchApprove_call(stakers: string[]): Promise<void>;
+    _customAttributes: {
+        (param1: number | BigNumber): Promise<BigNumber>;
+    };
+    approve: {
+        (params: IApproveParams): Promise<TransactionReceipt>;
+        call: (params: IApproveParams) => Promise<void>;
+    };
+    approvedStaker: {
+        (param1: string): Promise<boolean>;
+    };
+    balanceOf: {
+        (owner: string): Promise<BigNumber>;
+    };
+    baseURI: {
+        (): Promise<string>;
+    };
     batchApprove: {
         (stakers: string[]): Promise<TransactionReceipt>;
         call: (stakers: string[]) => Promise<void>;
     };
-    cap(): Promise<BigNumber>;
-    counter(): Promise<BigNumber>;
-    creationTime(param1: number | BigNumber): Promise<BigNumber>;
-    deny_send(user: string): Promise<TransactionReceipt>;
-    deny_call(user: string): Promise<void>;
+    cap: {
+        (): Promise<BigNumber>;
+    };
+    counter: {
+        (): Promise<BigNumber>;
+    };
+    creationTime: {
+        (param1: number | BigNumber): Promise<BigNumber>;
+    };
     deny: {
         (user: string): Promise<TransactionReceipt>;
         call: (user: string) => Promise<void>;
     };
-    getApproved(tokenId: number | BigNumber): Promise<string>;
-    getAttributes1(params: {
-        tokenId: number | BigNumber;
-        base: number | BigNumber;
-        offset: number | BigNumber;
-        digits: number | BigNumber;
-    }): Promise<BigNumber>;
-    getAttributes2(params: {
-        tokenId: number | BigNumber;
-        base: number | BigNumber;
-        digits: (number | BigNumber)[];
-    }): Promise<BigNumber[]>;
-    isApprovedForAll(params: {
-        owner: string;
-        operator: string;
-    }): Promise<boolean>;
-    isPermitted(param1: string): Promise<boolean>;
-    minimumStake(): Promise<BigNumber>;
-    minted(param1: string): Promise<boolean>;
-    name(): Promise<string>;
-    newOwner(): Promise<string>;
-    owner(): Promise<string>;
-    ownerOf(tokenId: number | BigNumber): Promise<string>;
-    permit_send(user: string): Promise<TransactionReceipt>;
-    permit_call(user: string): Promise<void>;
+    getApproved: {
+        (tokenId: number | BigNumber): Promise<string>;
+    };
+    getAttributes1: {
+        (params: IGetAttributes1Params): Promise<BigNumber>;
+    };
+    getAttributes2: {
+        (params: IGetAttributes2Params): Promise<BigNumber[]>;
+    };
+    isApprovedForAll: {
+        (params: IIsApprovedForAllParams): Promise<boolean>;
+    };
+    isPermitted: {
+        (param1: string): Promise<boolean>;
+    };
+    minimumStake: {
+        (): Promise<BigNumber>;
+    };
+    minted: {
+        (param1: string): Promise<boolean>;
+    };
+    name: {
+        (): Promise<string>;
+    };
+    newOwner: {
+        (): Promise<string>;
+    };
+    owner: {
+        (): Promise<string>;
+    };
+    ownerOf: {
+        (tokenId: number | BigNumber): Promise<string>;
+    };
     permit: {
         (user: string): Promise<TransactionReceipt>;
         call: (user: string) => Promise<void>;
     };
-    protocolFee(): Promise<BigNumber>;
-    protocolFeeBalance(): Promise<BigNumber>;
-    protocolFeeTo(): Promise<string>;
-    requireApproval(): Promise<boolean>;
-    safeTransferFrom_send(params: {
-        from: string;
-        to: string;
-        tokenId: number | BigNumber;
-    }): Promise<TransactionReceipt>;
-    safeTransferFrom_call(params: {
-        from: string;
-        to: string;
-        tokenId: number | BigNumber;
-    }): Promise<void>;
+    protocolFee: {
+        (): Promise<BigNumber>;
+    };
+    protocolFeeBalance: {
+        (): Promise<BigNumber>;
+    };
+    protocolFeeTo: {
+        (): Promise<string>;
+    };
+    requireApproval: {
+        (): Promise<boolean>;
+    };
     safeTransferFrom: {
-        (params: {
-            from: string;
-            to: string;
-            tokenId: number | BigNumber;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            from: string;
-            to: string;
-            tokenId: number | BigNumber;
-        }) => Promise<void>;
+        (params: ISafeTransferFromParams): Promise<TransactionReceipt>;
+        call: (params: ISafeTransferFromParams) => Promise<void>;
     };
-    safeTransferFrom_1_send(params: {
-        from: string;
-        to: string;
-        tokenId: number | BigNumber;
-        data: string;
-    }): Promise<TransactionReceipt>;
-    safeTransferFrom_1_call(params: {
-        from: string;
-        to: string;
-        tokenId: number | BigNumber;
-        data: string;
-    }): Promise<void>;
     safeTransferFrom_1: {
-        (params: {
-            from: string;
-            to: string;
-            tokenId: number | BigNumber;
-            data: string;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            from: string;
-            to: string;
-            tokenId: number | BigNumber;
-            data: string;
-        }) => Promise<void>;
+        (params: ISafeTransferFrom_1Params): Promise<TransactionReceipt>;
+        call: (params: ISafeTransferFrom_1Params) => Promise<void>;
     };
-    setApprovalForAll_send(params: {
-        operator: string;
-        approved: boolean;
-    }): Promise<TransactionReceipt>;
-    setApprovalForAll_call(params: {
-        operator: string;
-        approved: boolean;
-    }): Promise<void>;
     setApprovalForAll: {
-        (params: {
-            operator: string;
-            approved: boolean;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            operator: string;
-            approved: boolean;
-        }) => Promise<void>;
+        (params: ISetApprovalForAllParams): Promise<TransactionReceipt>;
+        call: (params: ISetApprovalForAllParams) => Promise<void>;
     };
-    setApprovedStaker_send(params: {
-        staker: string;
-        allow: boolean;
-    }): Promise<TransactionReceipt>;
-    setApprovedStaker_call(params: {
-        staker: string;
-        allow: boolean;
-    }): Promise<void>;
     setApprovedStaker: {
-        (params: {
-            staker: string;
-            allow: boolean;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            staker: string;
-            allow: boolean;
-        }) => Promise<void>;
+        (params: ISetApprovedStakerParams): Promise<TransactionReceipt>;
+        call: (params: ISetApprovedStakerParams) => Promise<void>;
     };
-    setBaseURI_send(baseURI: string): Promise<TransactionReceipt>;
-    setBaseURI_call(baseURI: string): Promise<void>;
     setBaseURI: {
         (baseURI: string): Promise<TransactionReceipt>;
         call: (baseURI: string) => Promise<void>;
     };
-    setCap_send(cap: number | BigNumber): Promise<TransactionReceipt>;
-    setCap_call(cap: number | BigNumber): Promise<void>;
     setCap: {
         (cap: number | BigNumber): Promise<TransactionReceipt>;
         call: (cap: number | BigNumber) => Promise<void>;
     };
-    setCustomAttribute_send(params: {
-        tokenId: number | BigNumber;
-        attribute: number | BigNumber;
-    }): Promise<TransactionReceipt>;
-    setCustomAttribute_call(params: {
-        tokenId: number | BigNumber;
-        attribute: number | BigNumber;
-    }): Promise<void>;
     setCustomAttribute: {
-        (params: {
-            tokenId: number | BigNumber;
-            attribute: number | BigNumber;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            tokenId: number | BigNumber;
-            attribute: number | BigNumber;
-        }) => Promise<void>;
+        (params: ISetCustomAttributeParams): Promise<TransactionReceipt>;
+        call: (params: ISetCustomAttributeParams) => Promise<void>;
     };
-    setMinimumStake_send(minimumStake: number | BigNumber): Promise<TransactionReceipt>;
-    setMinimumStake_call(minimumStake: number | BigNumber): Promise<void>;
     setMinimumStake: {
         (minimumStake: number | BigNumber): Promise<TransactionReceipt>;
         call: (minimumStake: number | BigNumber) => Promise<void>;
     };
-    setProtocolFee_send(params: {
-        protocolFee: number | BigNumber;
-        protocolFeeTo: string;
-    }): Promise<TransactionReceipt>;
-    setProtocolFee_call(params: {
-        protocolFee: number | BigNumber;
-        protocolFeeTo: string;
-    }): Promise<void>;
     setProtocolFee: {
-        (params: {
-            protocolFee: number | BigNumber;
-            protocolFeeTo: string;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            protocolFee: number | BigNumber;
-            protocolFeeTo: string;
-        }) => Promise<void>;
+        (params: ISetProtocolFeeParams): Promise<TransactionReceipt>;
+        call: (params: ISetProtocolFeeParams) => Promise<void>;
     };
-    stake_send(amount: number | BigNumber): Promise<TransactionReceipt>;
-    stake_call(amount: number | BigNumber): Promise<BigNumber>;
     stake: {
         (amount: number | BigNumber): Promise<TransactionReceipt>;
         call: (amount: number | BigNumber) => Promise<BigNumber>;
     };
-    stakeToken(): Promise<string>;
-    stakingBalance(param1: number | BigNumber): Promise<BigNumber>;
-    supportsInterface(interfaceId: string): Promise<boolean>;
-    symbol(): Promise<string>;
-    takeOwnership_send(): Promise<TransactionReceipt>;
-    takeOwnership_call(): Promise<void>;
+    stakeToken: {
+        (): Promise<string>;
+    };
+    stakingBalance: {
+        (param1: number | BigNumber): Promise<BigNumber>;
+    };
+    supportsInterface: {
+        (interfaceId: string): Promise<boolean>;
+    };
+    symbol: {
+        (): Promise<string>;
+    };
     takeOwnership: {
         (): Promise<TransactionReceipt>;
         call: () => Promise<void>;
     };
-    tokenByIndex(index: number | BigNumber): Promise<BigNumber>;
-    tokenOfOwnerByIndex(params: {
-        owner: string;
-        index: number | BigNumber;
-    }): Promise<BigNumber>;
-    tokenURI(tokenId: number | BigNumber): Promise<string>;
-    totalSupply(): Promise<BigNumber>;
-    transferFrom_send(params: {
-        from: string;
-        to: string;
-        tokenId: number | BigNumber;
-    }): Promise<TransactionReceipt>;
-    transferFrom_call(params: {
-        from: string;
-        to: string;
-        tokenId: number | BigNumber;
-    }): Promise<void>;
-    transferFrom: {
-        (params: {
-            from: string;
-            to: string;
-            tokenId: number | BigNumber;
-        }): Promise<TransactionReceipt>;
-        call: (params: {
-            from: string;
-            to: string;
-            tokenId: number | BigNumber;
-        }) => Promise<void>;
+    tokenByIndex: {
+        (index: number | BigNumber): Promise<BigNumber>;
     };
-    transferOwnership_send(newOwner: string): Promise<TransactionReceipt>;
-    transferOwnership_call(newOwner: string): Promise<void>;
+    tokenOfOwnerByIndex: {
+        (params: ITokenOfOwnerByIndexParams): Promise<BigNumber>;
+    };
+    tokenURI: {
+        (tokenId: number | BigNumber): Promise<string>;
+    };
+    totalSupply: {
+        (): Promise<BigNumber>;
+    };
+    transferFrom: {
+        (params: ITransferFromParams): Promise<TransactionReceipt>;
+        call: (params: ITransferFromParams) => Promise<void>;
+    };
     transferOwnership: {
         (newOwner: string): Promise<TransactionReceipt>;
         call: (newOwner: string) => Promise<void>;
     };
-    transferProtocolFee_send(): Promise<TransactionReceipt>;
-    transferProtocolFee_call(): Promise<void>;
     transferProtocolFee: {
         (): Promise<TransactionReceipt>;
         call: () => Promise<void>;
     };
-    unstake_send(tokenId: number | BigNumber): Promise<TransactionReceipt>;
-    unstake_call(tokenId: number | BigNumber): Promise<void>;
     unstake: {
         (tokenId: number | BigNumber): Promise<TransactionReceipt>;
         call: (tokenId: number | BigNumber) => Promise<void>;
