@@ -1,4 +1,4 @@
-import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-wallet";
+import {IWallet, Contract, Transaction, TransactionReceipt, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-contract";
 import Bin from "./ERC721.json";
 
 export interface IDeployParams {name:string;symbol:string}
@@ -103,7 +103,7 @@ export class ERC721 extends Contract{
         }
         this.balanceOf = balanceOf_call
         let getApproved_call = async (tokenId:number|BigNumber): Promise<string> => {
-            let result = await this.call('getApproved',[Utils.toString(tokenId)]);
+            let result = await this.call('getApproved',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         this.getApproved = getApproved_call
@@ -119,7 +119,7 @@ export class ERC721 extends Contract{
         }
         this.name = name_call
         let ownerOf_call = async (tokenId:number|BigNumber): Promise<string> => {
-            let result = await this.call('ownerOf',[Utils.toString(tokenId)]);
+            let result = await this.call('ownerOf',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         this.ownerOf = ownerOf_call
@@ -134,11 +134,11 @@ export class ERC721 extends Contract{
         }
         this.symbol = symbol_call
         let tokenURI_call = async (tokenId:number|BigNumber): Promise<string> => {
-            let result = await this.call('tokenURI',[Utils.toString(tokenId)]);
+            let result = await this.call('tokenURI',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         this.tokenURI = tokenURI_call
-        let approveParams = (params: IApproveParams) => [params.to,Utils.toString(params.tokenId)];
+        let approveParams = (params: IApproveParams) => [params.to,this.wallet.utils.toString(params.tokenId)];
         let approve_send = async (params: IApproveParams): Promise<TransactionReceipt> => {
             let result = await this.send('approve',approveParams(params));
             return result;
@@ -150,7 +150,7 @@ export class ERC721 extends Contract{
         this.approve = Object.assign(approve_send, {
             call:approve_call
         });
-        let safeTransferFromParams = (params: ISafeTransferFromParams) => [params.from,params.to,Utils.toString(params.tokenId)];
+        let safeTransferFromParams = (params: ISafeTransferFromParams) => [params.from,params.to,this.wallet.utils.toString(params.tokenId)];
         let safeTransferFrom_send = async (params: ISafeTransferFromParams): Promise<TransactionReceipt> => {
             let result = await this.send('safeTransferFrom',safeTransferFromParams(params));
             return result;
@@ -162,7 +162,7 @@ export class ERC721 extends Contract{
         this.safeTransferFrom = Object.assign(safeTransferFrom_send, {
             call:safeTransferFrom_call
         });
-        let safeTransferFrom_1Params = (params: ISafeTransferFrom_1Params) => [params.from,params.to,Utils.toString(params.tokenId),Utils.stringToBytes(params.data)];
+        let safeTransferFrom_1Params = (params: ISafeTransferFrom_1Params) => [params.from,params.to,this.wallet.utils.toString(params.tokenId),this.wallet.utils.stringToBytes(params.data)];
         let safeTransferFrom_1_send = async (params: ISafeTransferFromParams): Promise<TransactionReceipt> => {
             let result = await this.send('safeTransferFrom',safeTransferFromParams(params));
             return result;
@@ -186,7 +186,7 @@ export class ERC721 extends Contract{
         this.setApprovalForAll = Object.assign(setApprovalForAll_send, {
             call:setApprovalForAll_call
         });
-        let transferFromParams = (params: ITransferFromParams) => [params.from,params.to,Utils.toString(params.tokenId)];
+        let transferFromParams = (params: ITransferFromParams) => [params.from,params.to,this.wallet.utils.toString(params.tokenId)];
         let transferFrom_send = async (params: ITransferFromParams): Promise<TransactionReceipt> => {
             let result = await this.send('transferFrom',transferFromParams(params));
             return result;

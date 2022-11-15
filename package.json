@@ -14,9 +14,10 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@ijstech/eth-wallet": "https://github.com/ijstech/eth-wallet",
-    "@openzeppelin/contracts": "4.3.2",
     "@chainlink/contracts": "0.2.2",
+    "@ijstech/eth-contract": "0.1.4",
+    "@ijstech/eth-wallet": "0.1.24",
+    "@openzeppelin/contracts": "^4.8.0",
     "@types/node": "^16.11.7",
     "esbuild": "^0.13.13",
     "solc": "^0.8.10",

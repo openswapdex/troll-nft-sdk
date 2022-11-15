@@ -1,4 +1,4 @@
-import {IWallet, Contract, Transaction, TransactionReceipt, Utils, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-wallet";
+import {IWallet, Contract, Transaction, TransactionReceipt, BigNumber, Event, IBatchRequestObj} from "@ijstech/eth-contract";
 import Bin from "./TrollNFT.json";
 
 export interface IDeployParams {name:string;symbol:string;baseURI:string;cap:number|BigNumber;stakeToken:string;requireApproval:boolean;minimumStake:number|BigNumber;protocolFee:number|BigNumber;protocolFeeTo:string}
@@ -20,7 +20,7 @@ export class TrollNFT extends Contract{
         this.assign()
     }
     deploy(params: IDeployParams): Promise<string>{
-        return this.__deploy([params.name,params.symbol,params.baseURI,Utils.toString(params.cap),params.stakeToken,params.requireApproval,Utils.toString(params.minimumStake),Utils.toString(params.protocolFee),params.protocolFeeTo]);
+        return this.__deploy([params.name,params.symbol,params.baseURI,this.wallet.utils.toString(params.cap),params.stakeToken,params.requireApproval,this.wallet.utils.toString(params.minimumStake),this.wallet.utils.toString(params.protocolFee),params.protocolFeeTo]);
     }
     parseApprovalEvent(receipt: TransactionReceipt): TrollNFT.ApprovalEvent[]{
         return this.parseEvents(receipt, "Approval").map(e=>this.decodeApprovalEvent(e));
@@ -367,12 +367,12 @@ export class TrollNFT extends Contract{
     }
     private assign(){
         let _attributes_call = async (param1:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('_attributes',[Utils.toString(param1)]);
+            let result = await this.call('_attributes',[this.wallet.utils.toString(param1)]);
             return new BigNumber(result);
         }
         this._attributes = _attributes_call
         let _customAttributes_call = async (param1:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('_customAttributes',[Utils.toString(param1)]);
+            let result = await this.call('_customAttributes',[this.wallet.utils.toString(param1)]);
             return new BigNumber(result);
         }
         this._customAttributes = _customAttributes_call
@@ -402,22 +402,22 @@ export class TrollNFT extends Contract{
         }
         this.counter = counter_call
         let creationTime_call = async (param1:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('creationTime',[Utils.toString(param1)]);
+            let result = await this.call('creationTime',[this.wallet.utils.toString(param1)]);
             return new BigNumber(result);
         }
         this.creationTime = creationTime_call
         let getApproved_call = async (tokenId:number|BigNumber): Promise<string> => {
-            let result = await this.call('getApproved',[Utils.toString(tokenId)]);
+            let result = await this.call('getApproved',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         this.getApproved = getApproved_call
-        let getAttributes1Params = (params: IGetAttributes1Params) => [Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.offset),Utils.toString(params.digits)];
+        let getAttributes1Params = (params: IGetAttributes1Params) => [this.wallet.utils.toString(params.tokenId),this.wallet.utils.toString(params.base),this.wallet.utils.toString(params.offset),this.wallet.utils.toString(params.digits)];
         let getAttributes1_call = async (params: IGetAttributes1Params): Promise<BigNumber> => {
             let result = await this.call('getAttributes1',getAttributes1Params(params));
             return new BigNumber(result);
         }
         this.getAttributes1 = getAttributes1_call
-        let getAttributes2Params = (params: IGetAttributes2Params) => [Utils.toString(params.tokenId),Utils.toString(params.base),Utils.toString(params.digits)];
+        let getAttributes2Params = (params: IGetAttributes2Params) => [this.wallet.utils.toString(params.tokenId),this.wallet.utils.toString(params.base),this.wallet.utils.toString(params.digits)];
         let getAttributes2_call = async (params: IGetAttributes2Params): Promise<BigNumber[]> => {
             let result = await this.call('getAttributes2',getAttributes2Params(params));
             return result.map(e=>new BigNumber(e));
@@ -460,7 +460,7 @@ export class TrollNFT extends Contract{
         }
         this.owner = owner_call
         let ownerOf_call = async (tokenId:number|BigNumber): Promise<string> => {
-            let result = await this.call('ownerOf',[Utils.toString(tokenId)]);
+            let result = await this.call('ownerOf',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         this.ownerOf = ownerOf_call
@@ -490,7 +490,7 @@ export class TrollNFT extends Contract{
         }
         this.stakeToken = stakeToken_call
         let stakingBalance_call = async (param1:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('stakingBalance',[Utils.toString(param1)]);
+            let result = await this.call('stakingBalance',[this.wallet.utils.toString(param1)]);
             return new BigNumber(result);
         }
         this.stakingBalance = stakingBalance_call
@@ -505,18 +505,18 @@ export class TrollNFT extends Contract{
         }
         this.symbol = symbol_call
         let tokenByIndex_call = async (index:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('tokenByIndex',[Utils.toString(index)]);
+            let result = await this.call('tokenByIndex',[this.wallet.utils.toString(index)]);
             return new BigNumber(result);
         }
         this.tokenByIndex = tokenByIndex_call
-        let tokenOfOwnerByIndexParams = (params: ITokenOfOwnerByIndexParams) => [params.owner,Utils.toString(params.index)];
+        let tokenOfOwnerByIndexParams = (params: ITokenOfOwnerByIndexParams) => [params.owner,this.wallet.utils.toString(params.index)];
         let tokenOfOwnerByIndex_call = async (params: ITokenOfOwnerByIndexParams): Promise<BigNumber> => {
             let result = await this.call('tokenOfOwnerByIndex',tokenOfOwnerByIndexParams(params));
             return new BigNumber(result);
         }
         this.tokenOfOwnerByIndex = tokenOfOwnerByIndex_call
         let tokenURI_call = async (tokenId:number|BigNumber): Promise<string> => {
-            let result = await this.call('tokenURI',[Utils.toString(tokenId)]);
+            let result = await this.call('tokenURI',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         this.tokenURI = tokenURI_call
@@ -525,7 +525,7 @@ export class TrollNFT extends Contract{
             return new BigNumber(result);
         }
         this.totalSupply = totalSupply_call
-        let approveParams = (params: IApproveParams) => [params.to,Utils.toString(params.tokenId)];
+        let approveParams = (params: IApproveParams) => [params.to,this.wallet.utils.toString(params.tokenId)];
         let approve_send = async (params: IApproveParams): Promise<TransactionReceipt> => {
             let result = await this.send('approve',approveParams(params));
             return result;
@@ -570,7 +570,7 @@ export class TrollNFT extends Contract{
         this.permit = Object.assign(permit_send, {
             call:permit_call
         });
-        let safeTransferFromParams = (params: ISafeTransferFromParams) => [params.from,params.to,Utils.toString(params.tokenId)];
+        let safeTransferFromParams = (params: ISafeTransferFromParams) => [params.from,params.to,this.wallet.utils.toString(params.tokenId)];
         let safeTransferFrom_send = async (params: ISafeTransferFromParams): Promise<TransactionReceipt> => {
             let result = await this.send('safeTransferFrom',safeTransferFromParams(params));
             return result;
@@ -582,7 +582,7 @@ export class TrollNFT extends Contract{
         this.safeTransferFrom = Object.assign(safeTransferFrom_send, {
             call:safeTransferFrom_call
         });
-        let safeTransferFrom_1Params = (params: ISafeTransferFrom_1Params) => [params.from,params.to,Utils.toString(params.tokenId),Utils.stringToBytes(params.data)];
+        let safeTransferFrom_1Params = (params: ISafeTransferFrom_1Params) => [params.from,params.to,this.wallet.utils.toString(params.tokenId),this.wallet.utils.stringToBytes(params.data)];
         let safeTransferFrom_1_send = async (params: ISafeTransferFromParams): Promise<TransactionReceipt> => {
             let result = await this.send('safeTransferFrom',safeTransferFromParams(params));
             return result;
@@ -630,17 +630,17 @@ export class TrollNFT extends Contract{
             call:setBaseURI_call
         });
         let setCap_send = async (cap:number|BigNumber): Promise<TransactionReceipt> => {
-            let result = await this.send('setCap',[Utils.toString(cap)]);
+            let result = await this.send('setCap',[this.wallet.utils.toString(cap)]);
             return result;
         }
         let setCap_call = async (cap:number|BigNumber): Promise<void> => {
-            let result = await this.call('setCap',[Utils.toString(cap)]);
+            let result = await this.call('setCap',[this.wallet.utils.toString(cap)]);
             return;
         }
         this.setCap = Object.assign(setCap_send, {
             call:setCap_call
         });
-        let setCustomAttributeParams = (params: ISetCustomAttributeParams) => [Utils.toString(params.tokenId),Utils.toString(params.attribute)];
+        let setCustomAttributeParams = (params: ISetCustomAttributeParams) => [this.wallet.utils.toString(params.tokenId),this.wallet.utils.toString(params.attribute)];
         let setCustomAttribute_send = async (params: ISetCustomAttributeParams): Promise<TransactionReceipt> => {
             let result = await this.send('setCustomAttribute',setCustomAttributeParams(params));
             return result;
@@ -653,17 +653,17 @@ export class TrollNFT extends Contract{
             call:setCustomAttribute_call
         });
         let setMinimumStake_send = async (minimumStake:number|BigNumber): Promise<TransactionReceipt> => {
-            let result = await this.send('setMinimumStake',[Utils.toString(minimumStake)]);
+            let result = await this.send('setMinimumStake',[this.wallet.utils.toString(minimumStake)]);
             return result;
         }
         let setMinimumStake_call = async (minimumStake:number|BigNumber): Promise<void> => {
-            let result = await this.call('setMinimumStake',[Utils.toString(minimumStake)]);
+            let result = await this.call('setMinimumStake',[this.wallet.utils.toString(minimumStake)]);
             return;
         }
         this.setMinimumStake = Object.assign(setMinimumStake_send, {
             call:setMinimumStake_call
         });
-        let setProtocolFeeParams = (params: ISetProtocolFeeParams) => [Utils.toString(params.protocolFee),params.protocolFeeTo];
+        let setProtocolFeeParams = (params: ISetProtocolFeeParams) => [this.wallet.utils.toString(params.protocolFee),params.protocolFeeTo];
         let setProtocolFee_send = async (params: ISetProtocolFeeParams): Promise<TransactionReceipt> => {
             let result = await this.send('setProtocolFee',setProtocolFeeParams(params));
             return result;
@@ -676,11 +676,11 @@ export class TrollNFT extends Contract{
             call:setProtocolFee_call
         });
         let stake_send = async (amount:number|BigNumber): Promise<TransactionReceipt> => {
-            let result = await this.send('stake',[Utils.toString(amount)]);
+            let result = await this.send('stake',[this.wallet.utils.toString(amount)]);
             return result;
         }
         let stake_call = async (amount:number|BigNumber): Promise<BigNumber> => {
-            let result = await this.call('stake',[Utils.toString(amount)]);
+            let result = await this.call('stake',[this.wallet.utils.toString(amount)]);
             return new BigNumber(result);
         }
         this.stake = Object.assign(stake_send, {
@@ -697,7 +697,7 @@ export class TrollNFT extends Contract{
         this.takeOwnership = Object.assign(takeOwnership_send, {
             call:takeOwnership_call
         });
-        let transferFromParams = (params: ITransferFromParams) => [params.from,params.to,Utils.toString(params.tokenId)];
+        let transferFromParams = (params: ITransferFromParams) => [params.from,params.to,this.wallet.utils.toString(params.tokenId)];
         let transferFrom_send = async (params: ITransferFromParams): Promise<TransactionReceipt> => {
             let result = await this.send('transferFrom',transferFromParams(params));
             return result;
@@ -732,11 +732,11 @@ export class TrollNFT extends Contract{
             call:transferProtocolFee_call
         });
         let unstake_send = async (tokenId:number|BigNumber): Promise<TransactionReceipt> => {
-            let result = await this.send('unstake',[Utils.toString(tokenId)]);
+            let result = await this.send('unstake',[this.wallet.utils.toString(tokenId)]);
             return result;
         }
         let unstake_call = async (tokenId:number|BigNumber): Promise<void> => {
-            let result = await this.call('unstake',[Utils.toString(tokenId)]);
+            let result = await this.call('unstake',[this.wallet.utils.toString(tokenId)]);
             return;
         }
         this.unstake = Object.assign(unstake_send, {

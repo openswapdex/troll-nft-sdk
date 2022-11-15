@@ -1,4 +1,4 @@
-import { IWallet, Contract, TransactionReceipt, Event } from "@ijstech/eth-wallet";
+import { IWallet, Contract, TransactionReceipt, Event } from "@ijstech/eth-contract";
 export declare class Authorization extends Contract {
     constructor(wallet: IWallet, address?: string);
     deploy(): Promise<string>;
