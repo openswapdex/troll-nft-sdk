@@ -1,4 +1,4 @@
-import { IWallet, Contract, TransactionReceipt, BigNumber, Event } from "@ijstech/eth-contract";
+import { IWallet, Contract as _Contract, TransactionReceipt, BigNumber, Event, TransactionOptions } from "@ijstech/eth-contract";
 export interface IDeployParams {
     name: string;
     symbol: string;
@@ -65,9 +65,10 @@ export interface ITransferFromParams {
     to: string;
     tokenId: number | BigNumber;
 }
-export declare class TrollNFT extends Contract {
+export declare class TrollNFT extends _Contract {
+    static _abi: any;
     constructor(wallet: IWallet, address?: string);
-    deploy(params: IDeployParams): Promise<string>;
+    deploy(params: IDeployParams, options?: TransactionOptions): Promise<string>;
     parseApprovalEvent(receipt: TransactionReceipt): TrollNFT.ApprovalEvent[];
     decodeApprovalEvent(event: Event): TrollNFT.ApprovalEvent;
     parseApprovalForAllEvent(receipt: TransactionReceipt): TrollNFT.ApprovalForAllEvent[];
@@ -101,173 +102,173 @@ export declare class TrollNFT extends Contract {
     parseUnstakeEvent(receipt: TransactionReceipt): TrollNFT.UnstakeEvent[];
     decodeUnstakeEvent(event: Event): TrollNFT.UnstakeEvent;
     _attributes: {
-        (param1: number | BigNumber): Promise<BigNumber>;
+        (param1: number | BigNumber, options?: TransactionOptions): Promise<BigNumber>;
     };
     _customAttributes: {
-        (param1: number | BigNumber): Promise<BigNumber>;
+        (param1: number | BigNumber, options?: TransactionOptions): Promise<BigNumber>;
     };
     approve: {
-        (params: IApproveParams): Promise<TransactionReceipt>;
-        call: (params: IApproveParams) => Promise<void>;
+        (params: IApproveParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: IApproveParams, options?: TransactionOptions) => Promise<void>;
     };
     approvedStaker: {
-        (param1: string): Promise<boolean>;
+        (param1: string, options?: TransactionOptions): Promise<boolean>;
     };
     balanceOf: {
-        (owner: string): Promise<BigNumber>;
+        (owner: string, options?: TransactionOptions): Promise<BigNumber>;
     };
     baseURI: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     batchApprove: {
-        (stakers: string[]): Promise<TransactionReceipt>;
-        call: (stakers: string[]) => Promise<void>;
+        (stakers: string[], options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (stakers: string[], options?: TransactionOptions) => Promise<void>;
     };
     cap: {
-        (): Promise<BigNumber>;
+        (options?: TransactionOptions): Promise<BigNumber>;
     };
     counter: {
-        (): Promise<BigNumber>;
+        (options?: TransactionOptions): Promise<BigNumber>;
     };
     creationTime: {
-        (param1: number | BigNumber): Promise<BigNumber>;
+        (param1: number | BigNumber, options?: TransactionOptions): Promise<BigNumber>;
     };
     deny: {
-        (user: string): Promise<TransactionReceipt>;
-        call: (user: string) => Promise<void>;
+        (user: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (user: string, options?: TransactionOptions) => Promise<void>;
     };
     getApproved: {
-        (tokenId: number | BigNumber): Promise<string>;
+        (tokenId: number | BigNumber, options?: TransactionOptions): Promise<string>;
     };
     getAttributes1: {
-        (params: IGetAttributes1Params): Promise<BigNumber>;
+        (params: IGetAttributes1Params, options?: TransactionOptions): Promise<BigNumber>;
     };
     getAttributes2: {
-        (params: IGetAttributes2Params): Promise<BigNumber[]>;
+        (params: IGetAttributes2Params, options?: TransactionOptions): Promise<BigNumber[]>;
     };
     isApprovedForAll: {
-        (params: IIsApprovedForAllParams): Promise<boolean>;
+        (params: IIsApprovedForAllParams, options?: TransactionOptions): Promise<boolean>;
     };
     isPermitted: {
-        (param1: string): Promise<boolean>;
+        (param1: string, options?: TransactionOptions): Promise<boolean>;
     };
     minimumStake: {
-        (): Promise<BigNumber>;
+        (options?: TransactionOptions): Promise<BigNumber>;
     };
     minted: {
-        (param1: string): Promise<boolean>;
+        (param1: string, options?: TransactionOptions): Promise<boolean>;
     };
     name: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     newOwner: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     owner: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     ownerOf: {
-        (tokenId: number | BigNumber): Promise<string>;
+        (tokenId: number | BigNumber, options?: TransactionOptions): Promise<string>;
     };
     permit: {
-        (user: string): Promise<TransactionReceipt>;
-        call: (user: string) => Promise<void>;
+        (user: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (user: string, options?: TransactionOptions) => Promise<void>;
     };
     protocolFee: {
-        (): Promise<BigNumber>;
+        (options?: TransactionOptions): Promise<BigNumber>;
     };
     protocolFeeBalance: {
-        (): Promise<BigNumber>;
+        (options?: TransactionOptions): Promise<BigNumber>;
     };
     protocolFeeTo: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     requireApproval: {
-        (): Promise<boolean>;
+        (options?: TransactionOptions): Promise<boolean>;
     };
     safeTransferFrom: {
-        (params: ISafeTransferFromParams): Promise<TransactionReceipt>;
-        call: (params: ISafeTransferFromParams) => Promise<void>;
+        (params: ISafeTransferFromParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ISafeTransferFromParams, options?: TransactionOptions) => Promise<void>;
     };
     safeTransferFrom_1: {
-        (params: ISafeTransferFrom_1Params): Promise<TransactionReceipt>;
-        call: (params: ISafeTransferFrom_1Params) => Promise<void>;
+        (params: ISafeTransferFrom_1Params, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ISafeTransferFrom_1Params, options?: TransactionOptions) => Promise<void>;
     };
     setApprovalForAll: {
-        (params: ISetApprovalForAllParams): Promise<TransactionReceipt>;
-        call: (params: ISetApprovalForAllParams) => Promise<void>;
+        (params: ISetApprovalForAllParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ISetApprovalForAllParams, options?: TransactionOptions) => Promise<void>;
     };
     setApprovedStaker: {
-        (params: ISetApprovedStakerParams): Promise<TransactionReceipt>;
-        call: (params: ISetApprovedStakerParams) => Promise<void>;
+        (params: ISetApprovedStakerParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ISetApprovedStakerParams, options?: TransactionOptions) => Promise<void>;
     };
     setBaseURI: {
-        (baseURI: string): Promise<TransactionReceipt>;
-        call: (baseURI: string) => Promise<void>;
+        (baseURI: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (baseURI: string, options?: TransactionOptions) => Promise<void>;
     };
     setCap: {
-        (cap: number | BigNumber): Promise<TransactionReceipt>;
-        call: (cap: number | BigNumber) => Promise<void>;
+        (cap: number | BigNumber, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (cap: number | BigNumber, options?: TransactionOptions) => Promise<void>;
     };
     setCustomAttribute: {
-        (params: ISetCustomAttributeParams): Promise<TransactionReceipt>;
-        call: (params: ISetCustomAttributeParams) => Promise<void>;
+        (params: ISetCustomAttributeParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ISetCustomAttributeParams, options?: TransactionOptions) => Promise<void>;
     };
     setMinimumStake: {
-        (minimumStake: number | BigNumber): Promise<TransactionReceipt>;
-        call: (minimumStake: number | BigNumber) => Promise<void>;
+        (minimumStake: number | BigNumber, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (minimumStake: number | BigNumber, options?: TransactionOptions) => Promise<void>;
     };
     setProtocolFee: {
-        (params: ISetProtocolFeeParams): Promise<TransactionReceipt>;
-        call: (params: ISetProtocolFeeParams) => Promise<void>;
+        (params: ISetProtocolFeeParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ISetProtocolFeeParams, options?: TransactionOptions) => Promise<void>;
     };
     stake: {
-        (amount: number | BigNumber): Promise<TransactionReceipt>;
-        call: (amount: number | BigNumber) => Promise<BigNumber>;
+        (amount: number | BigNumber, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (amount: number | BigNumber, options?: TransactionOptions) => Promise<BigNumber>;
     };
     stakeToken: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     stakingBalance: {
-        (param1: number | BigNumber): Promise<BigNumber>;
+        (param1: number | BigNumber, options?: TransactionOptions): Promise<BigNumber>;
     };
     supportsInterface: {
-        (interfaceId: string): Promise<boolean>;
+        (interfaceId: string, options?: TransactionOptions): Promise<boolean>;
     };
     symbol: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     takeOwnership: {
-        (): Promise<TransactionReceipt>;
-        call: () => Promise<void>;
+        (options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (options?: TransactionOptions) => Promise<void>;
     };
     tokenByIndex: {
-        (index: number | BigNumber): Promise<BigNumber>;
+        (index: number | BigNumber, options?: TransactionOptions): Promise<BigNumber>;
     };
     tokenOfOwnerByIndex: {
-        (params: ITokenOfOwnerByIndexParams): Promise<BigNumber>;
+        (params: ITokenOfOwnerByIndexParams, options?: TransactionOptions): Promise<BigNumber>;
     };
     tokenURI: {
-        (tokenId: number | BigNumber): Promise<string>;
+        (tokenId: number | BigNumber, options?: TransactionOptions): Promise<string>;
     };
     totalSupply: {
-        (): Promise<BigNumber>;
+        (options?: TransactionOptions): Promise<BigNumber>;
     };
     transferFrom: {
-        (params: ITransferFromParams): Promise<TransactionReceipt>;
-        call: (params: ITransferFromParams) => Promise<void>;
+        (params: ITransferFromParams, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (params: ITransferFromParams, options?: TransactionOptions) => Promise<void>;
     };
     transferOwnership: {
-        (newOwner: string): Promise<TransactionReceipt>;
-        call: (newOwner: string) => Promise<void>;
+        (newOwner: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (newOwner: string, options?: TransactionOptions) => Promise<void>;
     };
     transferProtocolFee: {
-        (): Promise<TransactionReceipt>;
-        call: () => Promise<void>;
+        (options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (options?: TransactionOptions) => Promise<void>;
     };
     unstake: {
-        (tokenId: number | BigNumber): Promise<TransactionReceipt>;
-        call: (tokenId: number | BigNumber) => Promise<void>;
+        (tokenId: number | BigNumber, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (tokenId: number | BigNumber, options?: TransactionOptions) => Promise<void>;
     };
     private assign;
 }

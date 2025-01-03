@@ -1,7 +1,8 @@
-import { IWallet, Contract, TransactionReceipt, Event } from "@ijstech/eth-contract";
-export declare class Authorization extends Contract {
+import { IWallet, Contract as _Contract, TransactionReceipt, Event, TransactionOptions } from "@ijstech/eth-contract";
+export declare class Authorization extends _Contract {
+    static _abi: any;
     constructor(wallet: IWallet, address?: string);
-    deploy(): Promise<string>;
+    deploy(options?: TransactionOptions): Promise<string>;
     parseAuthorizeEvent(receipt: TransactionReceipt): Authorization.AuthorizeEvent[];
     decodeAuthorizeEvent(event: Event): Authorization.AuthorizeEvent;
     parseDeauthorizeEvent(receipt: TransactionReceipt): Authorization.DeauthorizeEvent[];
@@ -11,29 +12,29 @@ export declare class Authorization extends Contract {
     parseTransferOwnershipEvent(receipt: TransactionReceipt): Authorization.TransferOwnershipEvent[];
     decodeTransferOwnershipEvent(event: Event): Authorization.TransferOwnershipEvent;
     deny: {
-        (user: string): Promise<TransactionReceipt>;
-        call: (user: string) => Promise<void>;
+        (user: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (user: string, options?: TransactionOptions) => Promise<void>;
     };
     isPermitted: {
-        (param1: string): Promise<boolean>;
+        (param1: string, options?: TransactionOptions): Promise<boolean>;
     };
     newOwner: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     owner: {
-        (): Promise<string>;
+        (options?: TransactionOptions): Promise<string>;
     };
     permit: {
-        (user: string): Promise<TransactionReceipt>;
-        call: (user: string) => Promise<void>;
+        (user: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (user: string, options?: TransactionOptions) => Promise<void>;
     };
     takeOwnership: {
-        (): Promise<TransactionReceipt>;
-        call: () => Promise<void>;
+        (options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (options?: TransactionOptions) => Promise<void>;
     };
     transferOwnership: {
-        (newOwner: string): Promise<TransactionReceipt>;
-        call: (newOwner: string) => Promise<void>;
+        (newOwner: string, options?: TransactionOptions): Promise<TransactionReceipt>;
+        call: (newOwner: string, options?: TransactionOptions) => Promise<void>;
     };
     private assign;
 }

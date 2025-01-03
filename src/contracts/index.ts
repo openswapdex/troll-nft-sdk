@@ -1,4 +1,3 @@
-export { ERC721 } from './@openzeppelin/contracts/token/ERC721/ERC721';
 export { Authorization } from './Authorization';
 export { TrollNFT } from './TrollNFT';
 export { TrollNFTV2 } from './TrollNFTV2';

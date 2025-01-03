@@ -1,0 +1,8 @@
+{
+    "name": "@openswap/troll-nft-sdk",
+    "type": "contract",
+    "version": "0.1.2",
+    "dependencies": [
+        "@ijstech/eth-contract"
+    ]
+}
