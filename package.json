@@ -6,18 +6,19 @@
   "typings": "types/index.d.ts",
   "main": "lib",
   "scripts": {
-    "build": "npm run build:contracts && npm run build:lib",
-    "build:contracts": "sol2ts solidity.config.json",
-    "build:lib": "tsc && node esbuild.bundle"
+    "build": "rm -rf lib dist types pluginTypes src/contracts && npx @ijstech/compiler"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "@ijstech/eth-contract": "^0.1.25"
+  },
   "devDependencies": {
     "@chainlink/contracts": "0.2.2",
-    "@ijstech/eth-contract": "0.1.4",
-    "@ijstech/eth-wallet": "0.1.24",
-    "@openzeppelin/contracts": "^4.8.0",
+    "@ijstech/compiler": "^0.1.93",
+    "@ijstech/eth-wallet": "^0.1.101",
+    "@openzeppelin/contracts": "4.8.0",
     "@types/node": "^16.11.7",
     "esbuild": "^0.13.13",
     "solc": "^0.8.10",

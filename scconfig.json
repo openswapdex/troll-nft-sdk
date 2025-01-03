@@ -1,0 +1,10 @@
+{
+    "type": "contract",
+    "solidity": {
+        "version": "0.8.4",
+        "optimizerRuns": 999999,
+        "sourceDir": "contracts",
+        "outputDir": "src/contracts"
+    },
+    "version": "@ijstech/compiler"
+}
